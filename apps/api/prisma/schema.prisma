@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Provider {
+  github
+  gitlab
+  bitbucket
+}
+
+enum ReviewSource {
+  github
+  gitlab
+  bitbucket
+  manual
+}
+
+enum Verdict {
+  approve
+  needs_attention
+  changes_required
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  passwordHash String?  @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  oauthConnections OAuthConnection[]
+  reviews          Review[]
+
+  @@map("users")
+}
+
+model OAuthConnection {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  provider     Provider
+  accessToken  String   @map("access_token")
+  refreshToken String?  @map("refresh_token")
+  scope        String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider])
+  @@index([userId])
+  @@map("oauth_connections")
+}
+
+model Review {
+  id         String       @id @default(uuid()) @db.Uuid
+  userId     String       @map("user_id") @db.Uuid
+  provider   ReviewSource
+  repo       String?
+  prNumber   Int?         @map("pr_number")
+  prTitle    String?      @map("pr_title")
+  language   String?
+  score      Int
+  verdict    Verdict
+  feedback   Json
+  shareToken String?      @unique @map("share_token")
+  createdAt  DateTime     @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("reviews")
+}
