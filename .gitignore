@@ -28,7 +28,7 @@ build
 dist
 
 # Prisma generated client
-apps/api/generated
+apps/api/prisma/generated
 
 
 # Debug
