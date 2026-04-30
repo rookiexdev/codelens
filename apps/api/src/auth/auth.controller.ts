@@ -7,6 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { AuthResult, AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { LoginDto } from './dto/login.dto';
@@ -26,6 +27,8 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
+  @SkipThrottle({ default: true })
+  @Throttle({ auth: {} })
   login(@Body() dto: LoginDto): Promise<AuthResult> {
     return this.auth.login(dto);
   }
