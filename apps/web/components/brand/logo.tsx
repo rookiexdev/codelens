@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { SVGProps } from "react";
 
 export function Logomark({
@@ -60,6 +61,8 @@ interface LogoProps {
   iconClassName?: string;
   textClassName?: string;
   showWordmark?: boolean;
+  href?: string;
+  ariaLabel?: string;
 }
 
 export function Logo({
@@ -67,11 +70,31 @@ export function Logo({
   iconClassName = "h-8 w-8 text-accent",
   textClassName = "text-base font-semibold tracking-tight text-fg",
   showWordmark = true,
+  href,
+  ariaLabel,
 }: LogoProps) {
-  return (
-    <span className={`inline-flex items-center gap-2 ${className}`}>
+  const content = (
+    <>
       <Logomark className={iconClassName} />
       {showWordmark ? <span className={textClassName}>CodeLens</span> : null}
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        aria-label={ariaLabel ?? "Go to dashboard"}
+        className={`inline-flex items-center gap-2 rounded-md transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent ${className}`}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <span className={`inline-flex items-center gap-2 ${className}`}>
+      {content}
     </span>
   );
 }

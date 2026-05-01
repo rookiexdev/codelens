@@ -34,10 +34,10 @@ export function ThemeToggle({
             aria-label={`${t.label} theme — ${t.hint}`}
             title={`${t.label} · ${t.hint}`}
             onClick={() => setTheme(t.id)}
-            className={`relative inline-flex items-center justify-center rounded-full transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+            className={`relative inline-flex cursor-pointer items-center justify-center rounded-full transition-transform duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
               active
-                ? "ring-2 ring-offset-2 ring-offset-bg"
-                : "ring-0 hover:scale-110"
+                ? "scale-110 ring-2 ring-offset-2 ring-offset-bg hover:scale-125"
+                : "ring-0 hover:scale-125"
             }`}
             style={
               active
