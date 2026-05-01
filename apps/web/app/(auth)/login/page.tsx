@@ -10,6 +10,9 @@ import { setAccessToken } from "@/lib/auth-storage";
 import { api, extractApiError, type AuthResponse } from "@/lib/api";
 import { loginSchema, type LoginInput } from "@/lib/schemas";
 
+const fieldClasses =
+  "w-full rounded-lg border border-border bg-surface/60 px-3.5 py-2.5 text-sm text-fg placeholder:text-fg-subtle shadow-inner outline-none transition focus:border-accent/60 focus:bg-surface focus:ring-2 focus:ring-accent/25 sm:text-base";
+
 export default function LoginPage() {
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
@@ -45,15 +48,11 @@ export default function LoginPage() {
       footerLinkLabel="Create an account"
       footerHref="/signup"
     >
-      <form
-        noValidate
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-5"
-      >
+      <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div className="space-y-2">
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-zinc-200"
+            className="block text-sm font-medium text-fg"
           >
             Email
           </label>
@@ -64,17 +63,17 @@ export default function LoginPage() {
             placeholder="you@example.com"
             aria-invalid={errors.email ? "true" : "false"}
             {...register("email")}
-            className="w-full rounded-lg border border-zinc-800 bg-zinc-900/60 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 shadow-inner outline-none transition focus:border-emerald-400/60 focus:bg-zinc-900 focus:ring-2 focus:ring-emerald-400/20 sm:text-base"
+            className={fieldClasses}
           />
           {errors.email ? (
-            <p className="text-xs text-rose-300">{errors.email.message}</p>
+            <p className="text-xs text-danger">{errors.email.message}</p>
           ) : null}
         </div>
 
         <div className="space-y-2">
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-zinc-200"
+            className="block text-sm font-medium text-fg"
           >
             Password
           </label>
@@ -85,17 +84,17 @@ export default function LoginPage() {
             placeholder="••••••••"
             aria-invalid={errors.password ? "true" : "false"}
             {...register("password")}
-            className="w-full rounded-lg border border-zinc-800 bg-zinc-900/60 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 shadow-inner outline-none transition focus:border-emerald-400/60 focus:bg-zinc-900 focus:ring-2 focus:ring-emerald-400/20 sm:text-base"
+            className={fieldClasses}
           />
           {errors.password ? (
-            <p className="text-xs text-rose-300">{errors.password.message}</p>
+            <p className="text-xs text-danger">{errors.password.message}</p>
           ) : null}
         </div>
 
         {formError ? (
           <div
             role="alert"
-            className="rounded-lg border border-rose-400/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-200"
+            className="rounded-lg border border-danger/30 bg-danger/10 px-3 py-2 text-sm text-danger"
           >
             {formError}
           </div>
@@ -104,7 +103,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-zinc-950 shadow-sm transition hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300 disabled:cursor-not-allowed disabled:opacity-60 sm:text-base"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-fg shadow-sm transition hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-60 sm:text-base"
         >
           {isSubmitting ? (
             <>
