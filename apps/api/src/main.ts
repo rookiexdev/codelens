@@ -1,7 +1,9 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AppModule } from './app.module';
+import type { EnvironmentVariables } from './config/env.validation';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -14,7 +16,14 @@ async function bootstrap(): Promise<void> {
     }),
   );
 
-  const port = process.env.PORT ?? 3001;
+  const config =
+    app.get<ConfigService<EnvironmentVariables, true>>(ConfigService);
+  app.enableCors({
+    origin: config.get('WEB_ORIGIN', { infer: true }),
+    credentials: true,
+  });
+
+  const port = config.get('PORT', { infer: true });
   await app.listen(port);
 }
 
