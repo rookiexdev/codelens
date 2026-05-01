@@ -57,6 +57,10 @@ export class EnvironmentVariables {
   @IsOptional()
   APP_NAME: string = 'codelens-api';
 
+  @IsString()
+  @IsOptional()
+  WEB_ORIGIN: string = 'http://localhost:3000';
+
   @IsInt()
   @Min(1)
   @IsOptional()
