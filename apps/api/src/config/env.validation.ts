@@ -56,6 +56,26 @@ export class EnvironmentVariables {
   @IsString()
   @IsOptional()
   APP_NAME: string = 'codelens-api';
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  THROTTLE_DEFAULT_LIMIT: number = 60;
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  THROTTLE_DEFAULT_TTL_MS: number = 60_000;
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  THROTTLE_AUTH_LIMIT: number = 5;
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  THROTTLE_AUTH_TTL_MS: number = 60_000;
 }
 
 export function validateEnv(
