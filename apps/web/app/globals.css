@@ -92,6 +92,96 @@
   --danger: #be123c;
 }
 
+[data-theme="cyan"] {
+  color-scheme: dark;
+  --bg: #06141a;
+  --surface: #0f2530;
+  --surface-2: #0a1c25;
+  --border: #1d3c4a;
+  --fg: #e0f7fa;
+  --fg-muted: #93c8d4;
+  --fg-subtle: #5e9aa9;
+  --accent: #06b6d4;
+  --accent-hover: #22d3ee;
+  --accent-fg: #03252e;
+  --glow-1: #06b6d433;
+  --glow-2: #67e8f926;
+  --danger: #fda4af;
+}
+
+[data-theme="saffron"] {
+  color-scheme: dark;
+  --bg: #1a0f02;
+  --surface: #2a1a08;
+  --surface-2: #1f1305;
+  --border: #3d2918;
+  --fg: #fff4e6;
+  --fg-muted: #f3cfa3;
+  --fg-subtle: #c19878;
+  --accent: #ff9933;
+  --accent-hover: #ffb366;
+  --accent-fg: #2a1505;
+  --glow-1: #ff993333;
+  --glow-2: #fdba7426;
+  --danger: #fca5a5;
+}
+
+/*
+ * Color-blind friendly palette (Okabe–Ito).
+ * Avoids red/green pairing; uses high-contrast blue + vermillion accents
+ * that remain distinguishable under deuteranopia, protanopia, and tritanopia.
+ */
+[data-theme="colorblind"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --surface: #f5f5f5;
+  --surface-2: #eaeaea;
+  --border: #595959;
+  --fg: #000000;
+  --fg-muted: #404040;
+  --fg-subtle: #595959;
+  --accent: #0072b2;
+  --accent-hover: #005a8f;
+  --accent-fg: #ffffff;
+  --glow-1: #0072b226;
+  --glow-2: #e69f001f;
+  --danger: #d55e00;
+}
+
+[data-theme="winter"] {
+  color-scheme: light;
+  --bg: #f0f9ff;
+  --surface: #ffffff;
+  --surface-2: #e0f2fe;
+  --border: #bae6fd;
+  --fg: #0c4a6e;
+  --fg-muted: #075985;
+  --fg-subtle: #0369a1;
+  --accent: #0284c7;
+  --accent-hover: #0369a1;
+  --accent-fg: #ffffff;
+  --glow-1: #0ea5e926;
+  --glow-2: #67e8f91f;
+  --danger: #be123c;
+}
+
+[data-theme="winter-dark"] {
+  color-scheme: dark;
+  --bg: #0a1628;
+  --surface: #122238;
+  --surface-2: #0d1a2c;
+  --border: #1e3556;
+  --fg: #e0f2fe;
+  --fg-muted: #93c5fd;
+  --fg-subtle: #64829e;
+  --accent: #7dd3fc;
+  --accent-hover: #bae6fd;
+  --accent-fg: #0c1e35;
+  --glow-1: #7dd3fc33;
+  --glow-2: #c4b5fd26;
+  --danger: #fda4af;
+}
+
 /* ---------- Base ---------- */
 
 html {
@@ -154,5 +244,44 @@ body {
   .dialog-enter,
   .menu-enter {
     animation: none;
+  }
+}
+
+/* ---------- Theme switcher animations ---------- */
+
+@keyframes theme-orb-pulse {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.22); }
+  70%  { transform: scale(0.94); }
+  100% { transform: scale(1.08); }
+}
+
+@keyframes theme-orb-ripple {
+  0%   { transform: scale(0.65); opacity: 0.85; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+@keyframes theme-indicator-in {
+  from { opacity: 0; transform: translateY(-50%) scale(0.6); }
+  to   { opacity: 1; transform: translateY(-50%) scale(1); }
+}
+
+.theme-orb-pulse {
+  animation: theme-orb-pulse 480ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.theme-orb-ripple {
+  animation: theme-orb-ripple 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.theme-indicator-in {
+  animation: theme-indicator-in 260ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-orb-pulse,
+  .theme-orb-ripple,
+  .theme-indicator-in {
+    animation: none !important;
   }
 }
