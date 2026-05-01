@@ -1,7 +1,6 @@
 "use client";
 
-import { ArrowLeft, LogOut, Palette, Sparkles } from "lucide-react";
-import Link from "next/link";
+import { LogOut, Palette, Sparkles, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -10,6 +9,7 @@ import {
   useUser,
 } from "@/components/profile/user-context";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useToast } from "@/components/ui/toast";
 import { clearAccessToken } from "@/lib/auth-storage";
@@ -45,15 +45,15 @@ export default function ProfilePage() {
 
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
-      <nav className="mb-4 text-xs sm:mb-6 sm:text-sm">
-        <Link
-          href="/dashboard"
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded font-medium text-fg-muted underline-offset-4 transition hover:text-fg hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-        >
-          <ArrowLeft aria-hidden className="h-3.5 w-3.5" strokeWidth={2.25} />
-          Back to dashboard
-        </Link>
-      </nav>
+      <Breadcrumb
+        className="mb-4 sm:mb-6"
+        homeHref="/dashboard"
+        items={[
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Profile", icon: UserRound },
+        ]}
+      />
+
 
       <header className="rounded-2xl border border-border bg-surface/40 p-5 sm:p-8">
         <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">

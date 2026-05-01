@@ -1,5 +1,16 @@
 export const THEME_STORAGE_KEY = "codelens.theme";
 
+export type ThemeId =
+  | "forest"
+  | "aurora"
+  | "sunset"
+  | "daylight"
+  | "cyan"
+  | "saffron"
+  | "colorblind"
+  | "winter"
+  | "winter-dark";
+
 export interface ThemeMeta {
   id: ThemeId;
   label: string;
@@ -37,9 +48,42 @@ export const THEMES: ThemeMeta[] = [
     swatch: "#059669",
     ring: "#10b981",
   },
+  {
+    id: "cyan",
+    label: "Cyan",
+    hint: "Crisp teal on midnight",
+    swatch: "#06b6d4",
+    ring: "#22d3ee",
+  },
+  {
+    id: "saffron",
+    label: "Saffron",
+    hint: "Warm spice",
+    swatch: "#ff9933",
+    ring: "#ffb366",
+  },
+  {
+    id: "colorblind",
+    label: "Accessible",
+    hint: "Color-blind friendly",
+    swatch: "#0072b2",
+    ring: "#e69f00",
+  },
+  {
+    id: "winter",
+    label: "Winter",
+    hint: "Ice blue daylight",
+    swatch: "#38bdf8",
+    ring: "#7dd3fc",
+  },
+  {
+    id: "winter-dark",
+    label: "Winter Night",
+    hint: "Frozen midnight",
+    swatch: "#7dd3fc",
+    ring: "#bae6fd",
+  },
 ];
-
-export type ThemeId = "forest" | "aurora" | "sunset" | "daylight";
 
 export const DEFAULT_THEME: ThemeId = "forest";
 
