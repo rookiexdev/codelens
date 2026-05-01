@@ -6,9 +6,9 @@ const sizeMap = {
 } as const;
 
 const toneMap = {
-  default: "border-zinc-700 border-t-emerald-400",
-  onAccent: "border-zinc-950/20 border-t-zinc-950",
-  muted: "border-zinc-800 border-t-zinc-300",
+  default: "border-border border-t-accent",
+  onAccent: "border-accent-fg/25 border-t-accent-fg",
+  muted: "border-border border-t-fg-muted",
 } as const;
 
 interface SpinnerProps {
