@@ -26,16 +26,106 @@ enum Verdict {
   changes_required
 }
 
+enum SocialProvider {
+  // Git hosting
+  github
+  gitlab
+  bitbucket
+
+  // Competitive / coding platforms
+  leetcode
+  codeforces
+  hackerrank
+  codechef
+  kaggle
+  codepen
+
+  // Writing / Q&A
+  stackoverflow
+  devto
+  medium
+  hashnode
+  substack
+
+  // Social networks
+  x
+  linkedin
+  threads
+  mastodon
+  bluesky
+  instagram
+  facebook
+  reddit
+  youtube
+  twitch
+  telegram
+  discord
+
+  // Design portfolios
+  dribbble
+  behance
+
+  // Generic
+  website
+  other
+}
+
+enum ActivityType {
+  user_registered
+  user_logged_in
+  profile_updated
+  username_changed
+  social_links_updated
+  tech_stack_updated
+  status_updated
+  status_cleared
+  oauth_connected
+  oauth_disconnected
+  review_created
+  review_shared
+  badge_awarded
+  account_deleted
+  account_restored
+}
+
+enum BadgeTier {
+  bronze
+  silver
+  gold
+  platinum
+}
+
 model User {
-  id           String   @id @default(uuid()) @db.Uuid
-  email        String   @unique
-  passwordHash String?  @map("password_hash")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id           String    @id @default(uuid()) @db.Uuid
+  email        String    @unique
+  username     String    @unique
+  fullName     String?   @map("full_name")
+  description  String?
+  company      String?
+  location     String?
+  avatarSeed   String?   @map("avatar_seed")
+  avatarUrl    String?   @map("avatar_url")
+  techStack    String[]  @default([]) @map("tech_stack")
+  // Status (1:1 with user, no history). All four nullable; service treats
+  // any expired row as cleared and stops returning the values to clients.
+  statusEmoji     String?   @map("status_emoji")
+  statusText      String?   @map("status_text")
+  statusBusy      Boolean   @default(false) @map("status_busy")
+  statusExpiresAt DateTime? @map("status_expires_at")
+  statusUpdatedAt DateTime? @map("status_updated_at")
+  passwordHash String?   @map("password_hash")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
 
   oauthConnections OAuthConnection[]
   reviews          Review[]
+  socialLinks      UserSocialLink[]
+  activityLog      ActivityLog[]
+  contributions    UserContribution[]
+  badges           UserBadge[]
 
+  @@index([deletedAt])
   @@map("users")
 }
 
@@ -74,4 +164,79 @@ model Review {
 
   @@index([userId, createdAt(sort: Desc)])
   @@map("reviews")
+}
+
+model UserSocialLink {
+  id       String         @id @default(uuid()) @db.Uuid
+  userId   String         @map("user_id") @db.Uuid
+  provider SocialProvider
+  url      String
+  label    String?
+  position Int
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, position])
+  @@index([userId])
+  @@map("user_social_links")
+}
+
+model ActivityLog {
+  id         String       @id @default(uuid()) @db.Uuid
+  userId     String       @map("user_id") @db.Uuid
+  type       ActivityType
+  metadata   Json         @default("{}")
+  ipAddress  String?      @map("ip_address")
+  userAgent  String?      @map("user_agent")
+  occurredAt DateTime     @default(now()) @map("occurred_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, occurredAt(sort: Desc)])
+  @@index([userId, type, occurredAt(sort: Desc)])
+  @@map("activity_log")
+}
+
+model UserContribution {
+  userId String   @map("user_id") @db.Uuid
+  day    DateTime @db.Date
+  count  Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, day])
+  @@index([userId, day(sort: Desc)])
+  @@map("user_contributions")
+}
+
+model Badge {
+  id          String     @id @default(uuid()) @db.Uuid
+  slug        String     @unique
+  name        String
+  description String
+  iconKey     String     @map("icon_key")
+  tier        BadgeTier?
+  criteria    Json       @default("{}")
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  awards UserBadge[]
+
+  @@map("badges")
+}
+
+model UserBadge {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  badgeId   String   @map("badge_id") @db.Uuid
+  awardedAt DateTime @default(now()) @map("awarded_at")
+  metadata  Json     @default("{}")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+  @@index([badgeId])
+  @@map("user_badges")
 }

@@ -6,12 +6,15 @@ import {
   ThrottlerModule,
   ThrottlerModuleOptions,
 } from '@nestjs/throttler';
+import { ActivityModule } from './activity/activity.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { SoftDeleteModule } from './common/soft-delete/soft-delete.module';
 import { EnvironmentVariables, validateEnv } from './config/env.validation';
 import { LoggerModule } from './logger/logger.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -37,6 +40,9 @@ import { PrismaModule } from './prisma/prisma.module';
     }),
     LoggerModule,
     PrismaModule,
+    SoftDeleteModule,
+    ActivityModule,
+    UsersModule,
     AuthModule,
   ],
   controllers: [AppController],
