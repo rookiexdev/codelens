@@ -23,15 +23,38 @@ export function useUser(): AuthUser {
   return ctx;
 }
 
-export function getUserDisplayName(user: AuthUser): string {
-  return user.email.split("@")[0] ?? user.email;
+interface DisplayableUser {
+  username: string;
+  fullName?: string | null;
+  email?: string;
 }
 
-export function getUserInitials(user: AuthUser): string {
-  const local = user.email.split("@")[0] ?? user.email;
-  const parts = local.split(/[._\-+]+/).filter(Boolean);
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[1][0]).toUpperCase();
+export function getUserDisplayName(user: DisplayableUser): string {
+  const trimmed = user.fullName?.trim();
+  if (trimmed && trimmed.length > 0) return trimmed;
+  return user.username;
+}
+
+/**
+ * Two-letter avatar initials. Prefers fullName ("Gopal Sasmal" → "GS").
+ * Falls back to two characters of the username, then email local-part.
+ */
+export function getUserInitials(user: DisplayableUser): string {
+  const trimmed = user.fullName?.trim();
+  if (trimmed && trimmed.length > 0) {
+    const parts = trimmed.split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return trimmed.slice(0, 2).toUpperCase();
   }
-  return local.slice(0, 2).toUpperCase();
+  const username = user.username.replace(/[-_]+/g, "");
+  if (username.length >= 2) {
+    return username.slice(0, 2).toUpperCase();
+  }
+  if (user.email) {
+    const local = user.email.split("@")[0] ?? user.email;
+    return local.slice(0, 2).toUpperCase();
+  }
+  return user.username.slice(0, 2).toUpperCase();
 }

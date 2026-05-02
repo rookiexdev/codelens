@@ -4,6 +4,7 @@ import { clearAccessToken, getAccessToken } from "./auth-storage";
 export interface AuthUser {
   id: string;
   email: string;
+  username: string;
   createdAt: string;
 }
 
@@ -18,8 +19,7 @@ interface ApiErrorBody {
   statusCode?: number;
 }
 
-const baseURL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const baseURL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
 export const api: AxiosInstance = axios.create({
   baseURL,
