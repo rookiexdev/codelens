@@ -100,6 +100,20 @@ export class AuthService {
     return { accessToken: this.sign(user), user };
   }
 
+  async verifyPassword(userId: string, password: string): Promise<void> {
+    const row = await this.prisma.user.findFirst({
+      where: { id: userId, deletedAt: null },
+      select: { passwordHash: true },
+    });
+    if (!row?.passwordHash) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    const matches = await compare(password, row.passwordHash);
+    if (!matches) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+  }
+
   async validateById(id: string): Promise<AuthUser | null> {
     const row = await this.prisma.user.findFirst({
       where: { id, deletedAt: null },
