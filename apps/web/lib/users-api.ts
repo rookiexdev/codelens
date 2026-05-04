@@ -121,12 +121,13 @@ export interface ActivityFeedResponse {
 }
 
 /**
- * Service layer over the /users endpoints. All calls go through the shared
- * axios instance, which injects the auth header and clears the token on 401.
+ * Service layer for user-facing account endpoints (/users/* plus account-mgmt
+ * /auth/* helpers). All calls go through the shared axios instance, which
+ * injects the auth header and clears the token on 401.
  */
 export const usersApi = {
-  async getMe(): Promise<PrivateUserProfile> {
-    const { data } = await api.get<PrivateUserProfile>("/users/me");
+  async getMe(signal?: AbortSignal): Promise<PrivateUserProfile> {
+    const { data } = await api.get<PrivateUserProfile>("/users/me", { signal });
     return data;
   },
 
@@ -139,6 +140,10 @@ export const usersApi = {
 
   async deleteAccount(): Promise<void> {
     await api.delete("/users/me");
+  },
+
+  async verifyPassword(password: string): Promise<void> {
+    await api.post("/auth/verify-password", { password });
   },
 
   async replaceSocialLinks(
@@ -181,13 +186,14 @@ export const usersApi = {
   async getContributions(
     username: string,
     range?: { from?: Date; to?: Date },
+    signal?: AbortSignal,
   ): Promise<ContributionsResponse> {
     const params: Record<string, string> = {};
     if (range?.from) params.from = range.from.toISOString();
     if (range?.to) params.to = range.to.toISOString();
     const { data } = await api.get<ContributionsResponse>(
       `/users/${encodeURIComponent(username)}/contributions`,
-      { params },
+      { params, signal },
     );
     return data;
   },
@@ -195,13 +201,14 @@ export const usersApi = {
   async getActivity(
     username: string,
     options?: { limit?: number; cursor?: string },
+    signal?: AbortSignal,
   ): Promise<ActivityFeedResponse> {
     const params: Record<string, string | number> = {};
     if (options?.limit) params.limit = options.limit;
     if (options?.cursor) params.cursor = options.cursor;
     const { data } = await api.get<ActivityFeedResponse>(
       `/users/${encodeURIComponent(username)}/activity`,
-      { params },
+      { params, signal },
     );
     return data;
   },
