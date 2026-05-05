@@ -8,6 +8,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 
 export type TooltipSide = "top" | "bottom" | "left" | "right";
 export type TooltipAlign = "start" | "center" | "end";
@@ -31,18 +32,52 @@ interface TooltipProps {
   contentClassName?: string;
 }
 
-const SIDE_CLASS: Record<TooltipSide, string> = {
-  top: "bottom-full mb-2",
-  bottom: "top-full mt-2",
-  left: "right-full mr-2 top-1/2 -translate-y-1/2",
-  right: "left-full ml-2 top-1/2 -translate-y-1/2",
-};
+interface TooltipPosition {
+  top: number;
+  left: number;
+  transform: string;
+}
 
-const HORIZONTAL_ALIGN: Record<TooltipAlign, string> = {
-  start: "left-0",
-  center: "left-1/2 -translate-x-1/2",
-  end: "right-0",
-};
+const GAP = 8;
+
+function computePosition(
+  rect: DOMRect,
+  side: TooltipSide,
+  align: TooltipAlign,
+): TooltipPosition {
+  if (side === "left") {
+    return {
+      top: rect.top + rect.height / 2,
+      left: rect.left - GAP,
+      transform: "translate(-100%, -50%)",
+    };
+  }
+  if (side === "right") {
+    return {
+      top: rect.top + rect.height / 2,
+      left: rect.right + GAP,
+      transform: "translate(0, -50%)",
+    };
+  }
+
+  const top = side === "top" ? rect.top - GAP : rect.bottom + GAP;
+  const ty = side === "top" ? "-100%" : "0";
+
+  let left: number;
+  let tx: string;
+  if (align === "start") {
+    left = rect.left;
+    tx = "0";
+  } else if (align === "end") {
+    left = rect.right;
+    tx = "-100%";
+  } else {
+    left = rect.left + rect.width / 2;
+    tx = "-50%";
+  }
+
+  return { top, left, transform: `translate(${tx}, ${ty})` };
+}
 
 export function Tooltip({
   content,
@@ -56,7 +91,15 @@ export function Tooltip({
 }: TooltipProps): ReactElement {
   const id = useId();
   const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState<TooltipPosition | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const triggerRef = useRef<HTMLSpanElement | null>(null);
   const timerRef = useRef<number | null>(null);
+
+  // createPortal must wait until the document is available; SSR has no body.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const clearTimer = (): void => {
     if (timerRef.current !== null) {
@@ -65,10 +108,19 @@ export function Tooltip({
     }
   };
 
+  const updatePosition = (): void => {
+    const el = triggerRef.current;
+    if (!el) return;
+    setPos(computePosition(el.getBoundingClientRect(), side, align));
+  };
+
   const show = (): void => {
     if (disabled) return;
     clearTimer();
-    timerRef.current = window.setTimeout(() => setOpen(true), delayMs);
+    timerRef.current = window.setTimeout(() => {
+      updatePosition();
+      setOpen(true);
+    }, delayMs);
   };
 
   const hide = (): void => {
@@ -81,37 +133,51 @@ export function Tooltip({
     const onKey = (e: KeyboardEvent): void => {
       if (e.key === "Escape") setOpen(false);
     };
+    // Reposition while open: scroll inside any ancestor (capture=true), or
+    // window resize, can move the trigger relative to the viewport.
+    const onReflow = (): void => updatePosition();
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+    window.addEventListener("resize", onReflow);
+    window.addEventListener("scroll", onReflow, true);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", onReflow);
+      window.removeEventListener("scroll", onReflow, true);
+    };
+  }, [open, side, align]);
 
   useEffect(() => () => clearTimer(), []);
 
-  const isHorizontal = side === "left" || side === "right";
-  const positionClass = `${SIDE_CLASS[side]} ${
-    isHorizontal ? "" : HORIZONTAL_ALIGN[align]
-  }`;
+  const showBubble = mounted && open && pos !== null && !disabled;
 
   return (
     <span
-      className={`relative inline-flex ${className}`}
+      ref={triggerRef}
+      className={`inline-flex ${className}`}
       onMouseEnter={show}
       onMouseLeave={hide}
       onFocus={show}
       onBlur={hide}
-      aria-describedby={open && !disabled ? id : undefined}
+      aria-describedby={showBubble ? id : undefined}
     >
       {children}
-      <span
-        id={id}
-        role="tooltip"
-        aria-hidden={!open || disabled}
-        className={`pointer-events-none absolute z-50 whitespace-nowrap rounded-md border border-border bg-surface px-2 py-1 text-xs font-medium text-fg shadow-lg transition-opacity duration-150 ${positionClass} ${
-          open && !disabled ? "opacity-100" : "opacity-0"
-        } ${contentClassName}`}
-      >
-        {content}
-      </span>
+      {showBubble
+        ? createPortal(
+            <span
+              id={id}
+              role="tooltip"
+              className={`pointer-events-none fixed z-[60] whitespace-nowrap rounded-md border border-border bg-surface px-2 py-1 text-xs font-medium text-fg shadow-lg ${contentClassName}`}
+              style={{
+                top: pos.top,
+                left: pos.left,
+                transform: pos.transform,
+              }}
+            >
+              {content}
+            </span>,
+            document.body,
+          )
+        : null}
     </span>
   );
 }

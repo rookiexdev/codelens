@@ -11,20 +11,26 @@ export function Skeleton({ className = "" }: SkeletonProps) {
   );
 }
 
+function LayoutHeaderSkeleton() {
+  return (
+    <header className="border-b border-border bg-bg/60 backdrop-blur">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
+        <div className="flex items-center gap-2">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 ring-1 ring-accent/25">
+            <span className="h-2.5 w-2.5 rounded-sm bg-accent/60" />
+          </span>
+          <Skeleton className="h-4 w-24" />
+        </div>
+        <Skeleton className="h-8 w-20 rounded-lg" />
+      </div>
+    </header>
+  );
+}
+
 export function DashboardSkeleton() {
   return (
     <div className="min-h-dvh bg-bg text-fg">
-      <header className="border-b border-border bg-bg/60 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 ring-1 ring-accent/25">
-              <span className="h-2.5 w-2.5 rounded-sm bg-accent/60" />
-            </span>
-            <Skeleton className="h-4 w-24" />
-          </div>
-          <Skeleton className="h-8 w-20 rounded-lg" />
-        </div>
-      </header>
+      <LayoutHeaderSkeleton />
 
       <main className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
         <div className="rounded-2xl border border-border bg-surface/40 p-6 sm:p-8 lg:p-10">
@@ -43,6 +49,68 @@ export function DashboardSkeleton() {
               <Skeleton className="mt-2 h-4 w-3/4" />
             </div>
           </dl>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function ThemeRowSkeleton({ chips }: { chips: number }) {
+  return (
+    <div className="inline-flex max-w-full items-center gap-1.5 overflow-hidden rounded-full border border-border/60 bg-surface/40 p-1.5">
+      {Array.from({ length: chips }).map((_, i) => (
+        <Skeleton key={i} className="h-7 w-7 shrink-0 rounded-full" />
+      ))}
+    </div>
+  );
+}
+
+export function SettingsPageSkeleton() {
+  return (
+    <div className="min-h-dvh bg-bg text-fg">
+      <LayoutHeaderSkeleton />
+
+      <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+        <div className="mb-4 flex items-center gap-2 sm:mb-6">
+          <Skeleton className="h-3.5 w-3.5 rounded-sm" />
+          <Skeleton className="h-3 w-20" />
+          <span className="text-fg-subtle">/</span>
+          <Skeleton className="h-3 w-16" />
+        </div>
+
+        <div className="space-y-6">
+          <section>
+            <div className="flex flex-col gap-1">
+              <div className="inline-flex items-center gap-2">
+                <Skeleton className="h-4 w-4 rounded-sm" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+              <Skeleton className="h-3.5 w-60 max-w-full" />
+            </div>
+            <div className="mt-3 flex flex-col items-end gap-2 sm:items-start">
+              <ThemeRowSkeleton chips={10} />
+              <ThemeRowSkeleton chips={4} />
+            </div>
+          </section>
+
+          <hr className="border-border" />
+
+          <section>
+            <div className="flex flex-col gap-1">
+              <div className="inline-flex items-center gap-2">
+                <Skeleton className="h-4 w-4 rounded-sm" />
+                <Skeleton className="h-4 w-28" />
+              </div>
+              <Skeleton className="h-3.5 w-72 max-w-full" />
+            </div>
+            <div className="mt-3 flex flex-col gap-3 rounded-xl border border-danger/30 bg-danger/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0 space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3.5 w-full max-w-[22rem]" />
+              </div>
+              <Skeleton className="h-9 w-36 shrink-0 rounded-lg" />
+            </div>
+          </section>
         </div>
       </main>
     </div>

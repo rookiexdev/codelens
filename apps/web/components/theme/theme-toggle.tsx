@@ -8,7 +8,7 @@ import {
   type ReactElement,
 } from "react";
 import { useTheme } from "./theme-provider";
-import { THEMES, type ThemeMeta } from "@/lib/theme";
+import { THEMES, type ThemeMeta, type ThemeMode } from "@/lib/theme";
 import { Tooltip } from "@/components/ui/tooltip";
 
 interface ThemeToggleProps {
@@ -44,10 +44,48 @@ function orbGradient(t: ThemeMeta): string {
   return `radial-gradient(circle at 30% 25%, ${t.ring} 0%, ${t.swatch} 60%, ${t.swatch} 100%)`;
 }
 
+const DARK_THEMES = THEMES.filter((t) => t.mode === "dark");
+const LIGHT_THEMES = THEMES.filter((t) => t.mode === "light");
+
+const ROW_VARIANT: Record<
+  ThemeMode,
+  { container: string; ariaLabel: string }
+> = {
+  dark: {
+    container:
+      "border-zinc-700/50 bg-gradient-to-b from-zinc-900/85 to-zinc-950/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_4px_14px_rgba(0,0,0,0.25)]",
+    ariaLabel: "Dark color themes",
+  },
+  light: {
+    container:
+      "border-zinc-300/70 bg-gradient-to-b from-white/95 to-zinc-100/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_4px_14px_rgba(0,0,0,0.08)]",
+    ariaLabel: "Light color themes",
+  },
+};
+
 export function ThemeToggle({
   className = "",
   size = "md",
 }: ThemeToggleProps): ReactElement {
+  return (
+    <div className={`flex flex-col items-end gap-2 sm:items-start ${className}`}>
+      <ThemeRow themes={DARK_THEMES} variant="dark" size={size} />
+      <ThemeRow themes={LIGHT_THEMES} variant="light" size={size} />
+    </div>
+  );
+}
+
+interface ThemeRowProps {
+  themes: ThemeMeta[];
+  variant: ThemeMode;
+  size: "sm" | "md";
+}
+
+function ThemeRow({
+  themes,
+  variant,
+  size,
+}: ThemeRowProps): ReactElement {
   const { theme, setTheme } = useTheme();
   const s = SIZE[size];
 
@@ -59,19 +97,30 @@ export function ThemeToggle({
     height: 0,
     ready: false,
   });
-  // increments on every click — used as a key to re-mount the ripple/pulse
-  // elements so their CSS animations replay each time
+  // Increments on every click — used as a key to re-mount the ripple/pulse
+  // elements so their CSS animations replay each time.
   const [tick, setTick] = useState(0);
 
+  const activeIdx = themes.findIndex((t) => t.id === theme);
+  const activeMeta = activeIdx >= 0 ? themes[activeIdx] : null;
+
   const measure = (): void => {
-    const idx = THEMES.findIndex((t) => t.id === theme);
-    const el = itemRefs.current[idx];
+    if (activeIdx < 0) {
+      setBox((b) => (b.ready ? { ...b, ready: false } : b));
+      return;
+    }
+    const el = itemRefs.current[activeIdx];
     const container = containerRef.current;
     if (!el || !container) return;
+    // Each chip is wrapped in a Tooltip <span> that is itself `relative`,
+    // so the button's offsetParent isn't the container — `offsetLeft` would
+    // give the inset within the tooltip wrapper (always tiny, identical for
+    // every chip). Use viewport rects instead, then add scrollLeft so the
+    // value stays correct when the pill is horizontally scrolled.
     const eb = el.getBoundingClientRect();
     const cb = container.getBoundingClientRect();
     setBox({
-      left: eb.left - cb.left,
+      left: eb.left - cb.left + container.scrollLeft,
       width: eb.width,
       height: eb.height,
       ready: true,
@@ -90,16 +139,18 @@ export function ThemeToggle({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 
-  const activeMeta = THEMES.find((t) => t.id === theme);
+  const cfg = ROW_VARIANT[variant];
 
   return (
     <div
       ref={containerRef}
       role="radiogroup"
-      aria-label="Color theme"
-      className={`relative inline-flex items-center ${s.gap} ${s.containerPad} rounded-full border border-border/70 bg-gradient-to-b from-surface/70 to-surface-2/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_4px_14px_rgba(0,0,0,0.18)] backdrop-blur-md ${className}`}
+      aria-label={cfg.ariaLabel}
+      data-mode={variant}
+      className={`relative inline-flex max-w-full items-center overflow-x-auto rounded-full border backdrop-blur-md ${s.gap} ${s.containerPad} ${cfg.container}`}
+      style={{ maxWidth: "min(100%, calc(100vw - 2rem))" }}
     >
-      {/* sliding selection indicator — animates between positions */}
+      {/* sliding selection indicator — only renders for the row that owns the active theme */}
       {box.ready && activeMeta ? (
         <span
           aria-hidden
@@ -114,7 +165,7 @@ export function ThemeToggle({
         />
       ) : null}
 
-      {THEMES.map((t, i) => {
+      {themes.map((t, i) => {
         const active = t.id === theme;
         return (
           <Tooltip
@@ -140,7 +191,7 @@ export function ThemeToggle({
                 setTick((n) => n + 1);
                 setTheme(t.id);
               }}
-              className={`group relative inline-flex cursor-pointer items-center justify-center rounded-full ${s.chipPad} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
+              className={`group relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full ${s.chipPad} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
             >
               {/* expanding ring ripple — replays whenever `tick` changes for the active orb */}
               {active ? (

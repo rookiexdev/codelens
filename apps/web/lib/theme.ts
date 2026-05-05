@@ -1,15 +1,27 @@
 export const THEME_STORAGE_KEY = "codelens.theme";
 
 export type ThemeId =
-  | "forest"
-  | "aurora"
-  | "sunset"
-  | "daylight"
-  | "cyan"
-  | "saffron"
-  | "colorblind"
-  | "winter"
-  | "winter-dark";
+  | "emerald"
+  | "amethyst"
+  | "ember"
+  | "meadow"
+  | "lagoon"
+  | "tangerine"
+  | "beacon"
+  | "frost"
+  | "glacier"
+  | "blush"
+  | "matrix"
+  | "pulse"
+  | "shadow"
+  | "monokai"
+  | "cobalt"
+  | "milkshake"
+  | "nightowl"
+  | "rose"
+  | "noir";
+
+export type ThemeMode = "dark" | "light";
 
 export interface ThemeMeta {
   id: ThemeId;
@@ -17,75 +29,165 @@ export interface ThemeMeta {
   hint: string;
   swatch: string;
   ring: string;
+  mode: ThemeMode;
 }
 
 export const THEMES: ThemeMeta[] = [
   {
-    id: "forest",
-    label: "Forest",
-    hint: "Emerald on slate",
+    id: "emerald",
+    label: "Emerald",
+    hint: "Verdant green on slate",
     swatch: "#34d399",
     ring: "#6ee7b7",
+    mode: "dark",
   },
   {
-    id: "aurora",
-    label: "Aurora",
+    id: "amethyst",
+    label: "Amethyst",
     hint: "Violet glow",
     swatch: "#c4b5fd",
     ring: "#ddd6fe",
+    mode: "dark",
   },
   {
-    id: "sunset",
-    label: "Sunset",
-    hint: "Warm amber",
+    id: "ember",
+    label: "Ember",
+    hint: "Glowing amber",
     swatch: "#fbbf24",
     ring: "#fcd34d",
+    mode: "dark",
   },
   {
-    id: "daylight",
-    label: "Daylight",
-    hint: "Cream + emerald",
-    swatch: "#059669",
-    ring: "#10b981",
-  },
-  {
-    id: "cyan",
-    label: "Cyan",
+    id: "lagoon",
+    label: "Lagoon",
     hint: "Crisp teal on midnight",
     swatch: "#06b6d4",
     ring: "#22d3ee",
+    mode: "dark",
   },
   {
-    id: "saffron",
-    label: "Saffron",
+    id: "tangerine",
+    label: "Tangerine",
     hint: "Warm spice",
     swatch: "#ff9933",
     ring: "#ffb366",
+    mode: "dark",
   },
   {
-    id: "colorblind",
-    label: "Accessible",
-    hint: "Color-blind friendly",
-    swatch: "#0072b2",
-    ring: "#e69f00",
-  },
-  {
-    id: "winter",
-    label: "Winter",
-    hint: "Ice blue daylight",
-    swatch: "#38bdf8",
-    ring: "#7dd3fc",
-  },
-  {
-    id: "winter-dark",
-    label: "Winter Night",
+    id: "glacier",
+    label: "Glacier",
     hint: "Frozen midnight",
     swatch: "#7dd3fc",
     ring: "#bae6fd",
+    mode: "dark",
+  },
+  {
+    id: "matrix",
+    label: "Matrix",
+    hint: "Code green on void",
+    swatch: "#00ff41",
+    ring: "#4dff7f",
+    mode: "dark",
+  },
+  {
+    id: "pulse",
+    label: "Pulse",
+    hint: "Cyan on black",
+    swatch: "#00e5ff",
+    ring: "#67e8f9",
+    mode: "dark",
+  },
+  {
+    id: "shadow",
+    label: "Shadow",
+    hint: "Graphite mono",
+    swatch: "#a3a3a3",
+    ring: "#d4d4d4",
+    mode: "dark",
+  },
+  {
+    id: "monokai",
+    label: "Monokai",
+    hint: "Sublime classic",
+    swatch: "#a6e22e",
+    ring: "#f92672",
+    mode: "dark",
+  },
+  {
+    id: "cobalt",
+    label: "Cobalt",
+    hint: "Editor blue",
+    swatch: "#007acc",
+    ring: "#569cd6",
+    mode: "dark",
+  },
+  {
+    id: "milkshake",
+    label: "Milkshake",
+    hint: "Navy + petal pink",
+    swatch: "#fbcfe8",
+    ring: "#f9a8d4",
+    mode: "dark",
+  },
+  {
+    id: "nightowl",
+    label: "Night Owl",
+    hint: "Late-night blue",
+    swatch: "#82aaff",
+    ring: "#c792ea",
+    mode: "dark",
+  },
+  {
+    id: "rose",
+    label: "Rose",
+    hint: "Crimson bloom",
+    swatch: "#f43f5e",
+    ring: "#fb7185",
+    mode: "dark",
+  },
+  {
+    id: "noir",
+    label: "Noir",
+    hint: "Black & white",
+    swatch: "#ffffff",
+    ring: "#d4d4d4",
+    mode: "dark",
+  },
+  {
+    id: "meadow",
+    label: "Meadow",
+    hint: "Cream + emerald",
+    swatch: "#059669",
+    ring: "#10b981",
+    mode: "light",
+  },
+  {
+    id: "beacon",
+    label: "Beacon",
+    hint: "Color-blind friendly",
+    swatch: "#0072b2",
+    ring: "#e69f00",
+    mode: "light",
+  },
+  {
+    id: "frost",
+    label: "Frost",
+    hint: "Ice blue daylight",
+    swatch: "#38bdf8",
+    ring: "#7dd3fc",
+    mode: "light",
+  },
+  {
+    id: "blush",
+    label: "Blush",
+    hint: "Baby pink dawn",
+    swatch: "#f9a8d4",
+    ring: "#fbcfe8",
+    mode: "light",
   },
 ];
 
-export const DEFAULT_THEME: ThemeId = "forest";
+export const DEFAULT_THEME: ThemeId = "emerald";
 
 export const THEME_IDS = THEMES.map((t) => t.id) as ThemeId[];
 

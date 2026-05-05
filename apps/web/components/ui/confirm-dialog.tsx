@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Spinner } from "./spinner";
 
 export type ConfirmTone = "default" | "danger";
@@ -29,6 +30,11 @@ export function ConfirmDialog({
   onCancel,
 }: ConfirmDialogProps) {
   const confirmBtnRef = useRef<HTMLButtonElement | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -49,7 +55,7 @@ export function ConfirmDialog({
     };
   }, [open, busy, onCancel]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
   const confirmBase =
     "inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:text-[0.95rem]";
@@ -59,7 +65,7 @@ export function ConfirmDialog({
       ? "bg-danger text-bg hover:opacity-90 focus-visible:outline-danger"
       : "bg-accent text-accent-fg hover:bg-accent-hover focus-visible:outline-accent";
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -118,6 +124,7 @@ export function ConfirmDialog({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

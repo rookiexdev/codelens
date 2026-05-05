@@ -1,16 +1,17 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { Logo } from "@/components/brand/logo";
 import { ProfileMenu } from "@/components/profile/profile-menu";
 import { UserProvider } from "@/components/profile/user-context";
-import { DashboardSkeleton } from "@/components/ui/skeleton";
+import { DashboardSkeleton, SettingsPageSkeleton } from "@/components/ui/skeleton";
 import { api, type AuthUser } from "@/lib/api";
 import { clearAccessToken, getAccessToken } from "@/lib/auth-storage";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [status, setStatus] = useState<"loading" | "ready">("loading");
 
@@ -41,6 +42,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }, [router]);
 
   if (status !== "ready" || !user) {
+    if (pathname?.startsWith("/dashboard/settings")) {
+      return <SettingsPageSkeleton />;
+    }
     return <DashboardSkeleton />;
   }
 

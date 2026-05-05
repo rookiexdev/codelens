@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { ThemeDropdown } from "@/components/theme/theme-dropdown";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
@@ -13,7 +13,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <div className="absolute top-1/3 left-1/2 h-56 w-56 -translate-x-1/2 rounded-full bg-glow-1 opacity-50 blur-3xl" />
       </div>
       <div className="absolute top-4 right-4 z-20 sm:top-6 sm:right-6">
-        <ThemeToggle size="sm" />
+        <ThemeDropdown align="right" />
       </div>
       <div className="relative z-10 flex w-full">{children}</div>
     </div>

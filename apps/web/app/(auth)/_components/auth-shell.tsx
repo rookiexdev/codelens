@@ -26,8 +26,17 @@ export function AuthShell({
   return (
     <div className="mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 lg:grid-cols-2">
       <aside className="relative hidden flex-col justify-between overflow-hidden p-10 text-fg lg:flex xl:p-14">
-        <div className="absolute inset-0 bg-gradient-to-br from-glow-1 via-glow-2 to-transparent" />
-        <Logo iconClassName="h-8 w-8 text-accent" textClassName="text-base font-semibold tracking-tight text-fg" />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-glow-1 via-glow-2 to-transparent"
+        />
+        <Logo
+          href="/"
+          ariaLabel="Go to home"
+          className="relative z-10"
+          iconClassName="h-8 w-8 text-accent"
+          textClassName="text-base font-semibold tracking-tight text-fg"
+        />
         <div className="relative z-10 max-w-md space-y-4">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">
             {brandTagline}
@@ -48,7 +57,7 @@ export function AuthShell({
       <main className="flex flex-1 items-center justify-center px-5 py-10 sm:px-8 sm:py-14 lg:py-10 xl:px-16">
         <div className="w-full max-w-sm sm:max-w-md">
           <div className="mb-8 lg:hidden">
-            <Logo />
+            <Logo href="/" ariaLabel="Go to home" />
           </div>
 
           <div className="space-y-2">
