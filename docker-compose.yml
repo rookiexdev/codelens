@@ -1,17 +1,5 @@
 version: '3.8'
 services:
-  postgres:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: codelens
-      POSTGRES_PASSWORD: codelens
-      POSTGRES_DB: codelens
-    ports:
-      - '5432:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
   api:
     build:
       context: ./apps/api
@@ -19,8 +7,6 @@ services:
     ports:
       - '3001:3001'
     env_file: ./apps/api/.env
-    depends_on:
-      - postgres
 
   web:
     build:
@@ -31,6 +17,3 @@ services:
     env_file: ./apps/web/.env
     depends_on:
       - api
-
-volumes:
-  postgres_data:

@@ -7,6 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ActivityService } from '../activity/activity.service';
 import { SoftDeleteService } from '../common/soft-delete/soft-delete.service';
 import { Prisma } from '../../prisma/generated/client';
+import { USER_NOT_DELETED_FILTER } from '../common/soft-delete/filters';
 import { SetStatusDto } from './dto/status.dto';
 import { UpdateTechStackDto } from './dto/tech-stack.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -84,7 +85,7 @@ export class UsersService {
 
   async getPrivateProfile(userId: string): Promise<PrivateUserProfile> {
     const row = await this.prisma.user.findFirst({
-      where: { id: userId, deletedAt: null },
+      where: { id: userId, ...USER_NOT_DELETED_FILTER },
       select: PRIVATE_PROFILE_SELECT,
     });
     if (!row) throw new NotFoundException('user not found');
@@ -95,7 +96,7 @@ export class UsersService {
     username: string,
   ): Promise<PublicUserProfile> {
     const row = await this.prisma.user.findFirst({
-      where: { username, deletedAt: null },
+      where: { username, ...USER_NOT_DELETED_FILTER },
       select: PUBLIC_PROFILE_SELECT,
     });
     if (!row) throw new NotFoundException('user not found');
@@ -111,7 +112,7 @@ export class UsersService {
     }
 
     const current = await this.prisma.user.findFirst({
-      where: { id: userId, deletedAt: null },
+      where: { id: userId, ...USER_NOT_DELETED_FILTER },
       select: { id: true, username: true },
     });
     if (!current) throw new NotFoundException('user not found');
