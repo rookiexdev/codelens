@@ -16,6 +16,7 @@ import { ActivityService } from '../activity/activity.service';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { AuthUser } from '../auth/interfaces/auth-user.interface';
+import { USER_NOT_DELETED_FILTER } from '../common/soft-delete/filters';
 import { PrismaService } from '../prisma/prisma.service';
 import { ActivityQueryDto } from './dto/activity-query.dto';
 import { ContributionsQueryDto } from './dto/contributions-query.dto';
@@ -147,7 +148,7 @@ export class UsersController {
 
   private async resolveUserId(username: string): Promise<string> {
     const row = await this.prisma.user.findFirst({
-      where: { username, deletedAt: null },
+      where: { username, ...USER_NOT_DELETED_FILTER },
       select: { id: true },
     });
     if (!row) throw new NotFoundException('user not found');

@@ -13,6 +13,7 @@ import { RegisterDto } from './dto/register.dto';
 import { AuthUser } from './interfaces/auth-user.interface';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { Prisma } from '../../prisma/generated/client';
+import { USER_NOT_DELETED_FILTER } from '../common/soft-delete/filters';
 
 export interface AuthResult {
   accessToken: string;
@@ -20,6 +21,11 @@ export interface AuthResult {
 }
 
 const BCRYPT_ROUNDS = 12;
+const OBJECT_ID_RE = /^[a-f0-9]{24}$/i;
+
+function isObjectId(value: string): boolean {
+  return OBJECT_ID_RE.test(value);
+}
 
 @Injectable()
 export class AuthService {
@@ -68,10 +74,10 @@ export class AuthService {
   async login(dto: LoginDto): Promise<AuthResult> {
     const email = dto.email.toLowerCase();
     // Filter soft-deleted accounts: a tombstoned email won't match dto.email
-    // anyway (it has the #deleted-<id> suffix), but we keep the explicit
-    // deletedAt: null filter as a defense-in-depth invariant.
+    // anyway (it has the #deleted-<id> suffix), but the explicit
+    // not-deleted filter is kept as a defense-in-depth invariant.
     const row = await this.prisma.user.findFirst({
-      where: { email, deletedAt: null },
+      where: { email, ...USER_NOT_DELETED_FILTER },
       select: {
         id: true,
         email: true,
@@ -102,7 +108,7 @@ export class AuthService {
 
   async verifyPassword(userId: string, password: string): Promise<void> {
     const row = await this.prisma.user.findFirst({
-      where: { id: userId, deletedAt: null },
+      where: { id: userId, ...USER_NOT_DELETED_FILTER },
       select: { passwordHash: true },
     });
     if (!row?.passwordHash) {
@@ -115,8 +121,14 @@ export class AuthService {
   }
 
   async validateById(id: string): Promise<AuthUser | null> {
+    // JWTs issued before the Mongo migration carry Postgres UUIDs that
+    // Mongo cannot parse as ObjectIds. Treat any malformed id as "not found"
+    // so the strategy returns 401 instead of bubbling a 500.
+    if (!isObjectId(id)) {
+      return null;
+    }
     const row = await this.prisma.user.findFirst({
-      where: { id, deletedAt: null },
+      where: { id, ...USER_NOT_DELETED_FILTER },
       select: {
         id: true,
         email: true,

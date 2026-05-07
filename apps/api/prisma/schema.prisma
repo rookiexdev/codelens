@@ -4,7 +4,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 enum Provider {
@@ -96,7 +97,7 @@ enum BadgeTier {
 }
 
 model User {
-  id           String    @id @default(uuid()) @db.Uuid
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
   email        String    @unique
   username     String    @unique
   fullName     String?   @map("full_name")
@@ -130,8 +131,8 @@ model User {
 }
 
 model OAuthConnection {
-  id           String   @id @default(uuid()) @db.Uuid
-  userId       String   @map("user_id") @db.Uuid
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String   @map("user_id") @db.ObjectId
   provider     Provider
   accessToken  String   @map("access_token")
   refreshToken String?  @map("refresh_token")
@@ -147,8 +148,8 @@ model OAuthConnection {
 }
 
 model Review {
-  id         String       @id @default(uuid()) @db.Uuid
-  userId     String       @map("user_id") @db.Uuid
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String       @map("user_id") @db.ObjectId
   provider   ReviewSource
   repo       String?
   prNumber   Int?         @map("pr_number")
@@ -167,8 +168,8 @@ model Review {
 }
 
 model UserSocialLink {
-  id       String         @id @default(uuid()) @db.Uuid
-  userId   String         @map("user_id") @db.Uuid
+  id       String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String         @map("user_id") @db.ObjectId
   provider SocialProvider
   url      String
   label    String?
@@ -182,8 +183,8 @@ model UserSocialLink {
 }
 
 model ActivityLog {
-  id         String       @id @default(uuid()) @db.Uuid
-  userId     String       @map("user_id") @db.Uuid
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String       @map("user_id") @db.ObjectId
   type       ActivityType
   metadata   Json         @default("{}")
   ipAddress  String?      @map("ip_address")
@@ -198,19 +199,22 @@ model ActivityLog {
 }
 
 model UserContribution {
-  userId String   @map("user_id") @db.Uuid
-  day    DateTime @db.Date
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId String   @map("user_id") @db.ObjectId
+  // Was @db.Date in Postgres. MongoDB has no date-only type, so the service
+  // must normalize `day` to UTC midnight before insert/upsert.
+  day    DateTime
   count  Int      @default(0)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@id([userId, day])
+  @@unique([userId, day])
   @@index([userId, day(sort: Desc)])
   @@map("user_contributions")
 }
 
 model Badge {
-  id          String     @id @default(uuid()) @db.Uuid
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
   slug        String     @unique
   name        String
   description String
@@ -226,9 +230,9 @@ model Badge {
 }
 
 model UserBadge {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @map("user_id") @db.Uuid
-  badgeId   String   @map("badge_id") @db.Uuid
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @map("user_id") @db.ObjectId
+  badgeId   String   @map("badge_id") @db.ObjectId
   awardedAt DateTime @default(now()) @map("awarded_at")
   metadata  Json     @default("{}")
 
