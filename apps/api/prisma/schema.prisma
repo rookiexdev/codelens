@@ -90,10 +90,28 @@ enum ActivityType {
 }
 
 enum BadgeTier {
-  bronze
-  silver
-  gold
-  platinum
+  contributor
+  quality
+  specialist
+  elite
+}
+
+enum BadgeRarity {
+  common
+  uncommon
+  rare
+  legendary
+}
+
+enum BadgeCategory {
+  activity
+  code_quality
+  security
+  testing
+  documentation
+  performance
+  streak
+  platform
 }
 
 model User {
@@ -214,15 +232,23 @@ model UserContribution {
 }
 
 model Badge {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  slug        String     @unique
-  name        String
-  description String
-  iconKey     String     @map("icon_key")
-  tier        BadgeTier?
-  criteria    Json       @default("{}")
-  isActive    Boolean    @default(true) @map("is_active")
-  createdAt   DateTime   @default(now()) @map("created_at")
+  id                 String         @id @default(auto()) @map("_id") @db.ObjectId
+  slug               String         @unique
+  name               String
+  role               String
+  description        String
+  iconKey            String         @map("icon_key")
+  tier               BadgeTier
+  category           BadgeCategory
+  rarity             BadgeRarity    @default(common)
+  colorTheme         String         @map("color_theme")
+  xpReward           Int            @default(0) @map("xp_reward")
+  visibleOnPrComment Boolean        @default(false) @map("visible_on_pr_comment")
+  progressTrackable  Boolean        @default(false) @map("progress_trackable")
+  progressLabel      String?        @map("progress_label")
+  criteria           Json           @default("{}")
+  isActive           Boolean        @default(true) @map("is_active")
+  createdAt          DateTime       @default(now()) @map("created_at")
 
   awards UserBadge[]
 

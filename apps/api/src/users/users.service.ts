@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ActivityService } from '../activity/activity.service';
+import { BadgesService } from '../badges/badges.service';
 import { SoftDeleteService } from '../common/soft-delete/soft-delete.service';
 import { Prisma } from '../../prisma/generated/client';
 import { USER_NOT_DELETED_FILTER } from '../common/soft-delete/filters';
@@ -53,9 +54,14 @@ const PUBLIC_PROFILE_SELECT = {
         select: {
           slug: true,
           name: true,
+          role: true,
           description: true,
           iconKey: true,
           tier: true,
+          category: true,
+          rarity: true,
+          colorTheme: true,
+          xpReward: true,
         },
       },
     },
@@ -80,6 +86,7 @@ export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly activity: ActivityService,
+    private readonly badges: BadgesService,
     private readonly softDelete: SoftDeleteService,
   ) {}
 
@@ -148,6 +155,11 @@ export class UsersService {
             tx,
           });
         }
+        await this.badges.evaluateForUser({
+          userId,
+          trigger: 'profile_updated',
+          tx,
+        });
         return row;
       });
       return mapPrivate(updated);
@@ -221,6 +233,11 @@ export class UsersService {
         metadata: { count: cleaned.length },
         tx,
       });
+      await this.badges.evaluateForUser({
+        userId,
+        trigger: 'profile_updated',
+        tx,
+      });
       return row.techStack;
     });
   }
@@ -257,6 +274,11 @@ export class UsersService {
           busy: dto.busy ?? false,
           expiresAt: dto.expiresAt ?? null,
         },
+        tx,
+      });
+      await this.badges.evaluateForUser({
+        userId,
+        trigger: 'status_updated',
         tx,
       });
       return updated;
@@ -339,9 +361,14 @@ function mapPublic(row: PublicProfileRow): PublicUserProfile {
     badges: row.badges.map<BadgeView>((b) => ({
       slug: b.badge.slug,
       name: b.badge.name,
+      role: b.badge.role,
       description: b.badge.description,
       iconKey: b.badge.iconKey,
       tier: b.badge.tier,
+      category: b.badge.category,
+      rarity: b.badge.rarity,
+      colorTheme: b.badge.colorTheme,
+      xpReward: b.badge.xpReward,
       awardedAt: b.awardedAt,
     })),
   };

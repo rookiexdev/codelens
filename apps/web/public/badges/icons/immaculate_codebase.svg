@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="Immaculate Codebase">
+  <defs>
+    <radialGradient id="b10" cx="0.35" cy="0.3" r="0.85">
+      <stop offset="0%" stop-color="#76E0A4"/>
+      <stop offset="55%" stop-color="#1FA363"/>
+      <stop offset="100%" stop-color="#0E5A37"/>
+    </radialGradient>
+  </defs>
+  <circle cx="24" cy="24" r="22" fill="#0E5A37"/>
+  <circle cx="24" cy="24" r="20" fill="url(#b10)"/>
+  <path d="M 10 20 A 14 14 0 0 1 28 10" stroke="#76E0A4" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.65"/>
+  <path d="M 18 16 L 13 24 L 18 32" stroke="#0E5A37" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 30 16 L 35 24 L 30 32" stroke="#0E5A37" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 26 16 L 22 32" stroke="#0E5A37" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+</svg>

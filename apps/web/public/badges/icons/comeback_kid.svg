@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="Comeback Kid">
+  <defs>
+    <radialGradient id="b5" cx="0.35" cy="0.3" r="0.85">
+      <stop offset="0%" stop-color="#FF9C82"/>
+      <stop offset="55%" stop-color="#E0654A"/>
+      <stop offset="100%" stop-color="#883218"/>
+    </radialGradient>
+  </defs>
+  <circle cx="24" cy="24" r="22" fill="#883218"/>
+  <circle cx="24" cy="24" r="20" fill="url(#b5)"/>
+  <path d="M 10 20 A 14 14 0 0 1 28 10" stroke="#FF9C82" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.65"/>
+  <path d="M 32 24 A 8 8 0 1 1 24 16" stroke="#883218" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M 24 16 L 27 13.5 M 24 16 L 27 18.5" stroke="#883218" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+</svg>

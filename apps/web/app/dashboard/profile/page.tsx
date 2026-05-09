@@ -132,6 +132,7 @@ export default function ProfilePage() {
           username={profile.username}
           totals={totals}
           contributions={contributions}
+          badges={profile.badges}
         />
       </div>
 
