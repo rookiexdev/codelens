@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="Kilocoder">
+  <defs>
+    <radialGradient id="b17" cx="0.35" cy="0.3" r="0.85">
+      <stop offset="0%" stop-color="#B49DFF"/>
+      <stop offset="55%" stop-color="#7757E0"/>
+      <stop offset="100%" stop-color="#3F2D9C"/>
+    </radialGradient>
+  </defs>
+  <circle cx="24" cy="24" r="22" fill="#3F2D9C"/>
+  <circle cx="24" cy="24" r="20" fill="url(#b17)"/>
+  <path d="M 10 20 A 14 14 0 0 1 28 10" stroke="#B49DFF" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.65"/>
+  <path d="M 18 13 L 30 13 L 30 22 C 30 26 26.5 28.5 24 28.5 C 21.5 28.5 18 26 18 22 Z" fill="#3F2D9C"/>
+  <path d="M 13 16 L 18 16 L 18 22 C 16 22 14 20 13 18 Z M 30 16 L 35 16 L 35 18 C 34 20 32 22 30 22 Z" fill="#3F2D9C" opacity="0.7"/>
+  <rect x="22.5" y="28.5" width="3" height="4" fill="#3F2D9C"/>
+  <rect x="17" y="32" width="14" height="2.5" fill="#3F2D9C"/>
+</svg>

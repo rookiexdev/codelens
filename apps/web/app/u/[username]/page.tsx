@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Award,
   Building2,
   CalendarDays,
   ExternalLink,
@@ -16,6 +15,7 @@ import { ActivityFeed } from "@/components/profile/activity-feed";
 import { Avatar } from "@/components/profile/avatar";
 import { ContributionGraph } from "@/components/profile/contribution-graph";
 import { ContributionTotals } from "@/components/profile/contribution-totals";
+import { ProfileBadges } from "@/components/profile/profile-badges";
 import { getUserDisplayName } from "@/components/profile/user-context";
 import { Logo } from "@/components/brand/logo";
 import { DashboardSkeleton } from "@/components/ui/skeleton";
@@ -229,40 +229,7 @@ export default function PublicProfilePage() {
             <ContributionTotals totals={totals} />
             <ContributionGraph contributions={contributions} />
 
-            <section className="rounded-2xl border border-border bg-surface/40 p-5 sm:p-6">
-              <header className="flex items-center justify-between gap-3">
-                <h2 className="inline-flex items-center gap-2 text-base font-bold tracking-tight sm:text-lg">
-                  <Award
-                    aria-hidden
-                    className="h-4 w-4 text-accent"
-                    strokeWidth={2.25}
-                  />
-                  Badges
-                </h2>
-                {profile.badges.length === 0 ? (
-                  <span className="rounded-full border border-border bg-surface-2/60 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-fg-subtle">
-                    Coming soon
-                  </span>
-                ) : null}
-              </header>
-              {profile.badges.length === 0 ? (
-                <p className="mt-3 rounded-xl border border-dashed border-border bg-surface-2/30 p-6 text-center text-sm font-medium text-fg-muted">
-                  No badges yet — they&apos;re landing soon.
-                </p>
-              ) : (
-                <ul className="mt-3 flex flex-wrap gap-2">
-                  {profile.badges.map((badge) => (
-                    <li
-                      key={badge.slug}
-                      title={badge.description}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent"
-                    >
-                      {badge.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
+            <ProfileBadges earned={profile.badges} />
 
             <ActivityFeed key={profile.username} username={profile.username} />
           </div>

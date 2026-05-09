@@ -1,0 +1,422 @@
+[
+  {
+    "id": "first_pr_landed",
+    "name": "Hello, World",
+    "role": "First-Time Contributor",
+    "tier": "Contributor",
+    "category": "Activity",
+    "icon_prompt": "A glossy 3D blue coin medallion with a stylized merge-arrow glyph (two dots connected by a curved line) embossed in the center; soft top-left highlight, subtle rim shadow",
+    "color_theme": "blue",
+    "description": "Submitted your very first pull request for AI review. The journey starts here.",
+    "unlock_rule": {
+      "metric": "pr_count",
+      "condition": ">= 1",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 50,
+    "rarity": "Common",
+    "visible_on_pr_comment": true,
+    "progress_trackable": false,
+    "progress_label": "Earned on first PR"
+  },
+  {
+    "id": "streak_starter",
+    "name": "Streak Starter",
+    "role": "Daily Shipper",
+    "tier": "Contributor",
+    "category": "Streak",
+    "icon_prompt": "A glossy 3D amber medallion with a stylized flame embossed in the center; warm metallic finish, subtle bevel highlight",
+    "color_theme": "amber",
+    "description": "Shipped a reviewed PR every day for seven consecutive days. The habit is forming.",
+    "unlock_rule": {
+      "metric": "streak_days",
+      "condition": ">= 7",
+      "timeframe": "consecutive",
+      "reset_on_fail": true
+    },
+    "xp_reward": 100,
+    "rarity": "Common",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 7 day streak"
+  },
+  {
+    "id": "monthly_grinder",
+    "name": "Monthly Grinder",
+    "role": "30-Day Devotee",
+    "tier": "Contributor",
+    "category": "Streak",
+    "icon_prompt": "A 3D teal medallion with a calendar-with-checkmark glyph in the center; cool metallic finish, soft top-left highlight",
+    "color_theme": "teal",
+    "description": "A full thirty days of consecutive reviewed PRs. This is no longer a habit — it's identity.",
+    "unlock_rule": {
+      "metric": "streak_days",
+      "condition": ">= 30",
+      "timeframe": "consecutive",
+      "reset_on_fail": true
+    },
+    "xp_reward": 250,
+    "rarity": "Uncommon",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 30 day streak"
+  },
+  {
+    "id": "active_contributor",
+    "name": "Active Contributor",
+    "role": "Cadence Keeper",
+    "tier": "Contributor",
+    "category": "Activity",
+    "icon_prompt": "A 3D blue medallion with three rising bars (volume / activity glyph) embossed in the center; modern, polished, subtle highlight",
+    "color_theme": "blue",
+    "description": "Twenty-five reviewed PRs in a rolling 30-day window. You ship reliably.",
+    "unlock_rule": {
+      "metric": "pr_count",
+      "condition": ">= 25",
+      "timeframe": "rolling_30_days",
+      "reset_on_fail": true
+    },
+    "xp_reward": 200,
+    "rarity": "Uncommon",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 25 PRs in last 30d"
+  },
+  {
+    "id": "comeback_kid",
+    "name": "Comeback Kid",
+    "role": "Returning Champion",
+    "tier": "Contributor",
+    "category": "Activity",
+    "icon_prompt": "A 3D coral medallion with a circular return-arrow glyph in the center; warm finish, slight bevel and highlight",
+    "color_theme": "coral",
+    "description": "Returned after thirty-plus days of silence and shipped within a week. Welcome back.",
+    "unlock_rule": {
+      "metric": "gap_then_return",
+      "condition": "gap_days >= 30 && return_within_days <= 7",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 150,
+    "rarity": "Uncommon",
+    "visible_on_pr_comment": false,
+    "progress_trackable": false,
+    "progress_label": "One-time milestone"
+  },
+  {
+    "id": "clean_review",
+    "name": "Clean Review",
+    "role": "Pristine Coder",
+    "tier": "Quality",
+    "category": "Code Quality",
+    "icon_prompt": "A 3D green medallion with a bold checkmark glyph embossed in the center; polished metallic finish, soft highlight",
+    "color_theme": "green",
+    "description": "Shipped a single PR with an AI quality score of 95 or higher. One perfect deliverable.",
+    "unlock_rule": {
+      "metric": "ai_score",
+      "condition": ">= 95",
+      "timeframe": "per_pr",
+      "reset_on_fail": false
+    },
+    "xp_reward": 100,
+    "rarity": "Common",
+    "visible_on_pr_comment": true,
+    "progress_trackable": false,
+    "progress_label": "Earned on qualifying PR"
+  },
+  {
+    "id": "zero_issue_author",
+    "name": "Zero-Issue Author",
+    "role": "Flawless Streaker",
+    "tier": "Quality",
+    "category": "Code Quality",
+    "icon_prompt": "A 3D green medallion with a four-pointed sparkle/star glyph in the center; clean, sharp, with subtle bevel and corner glints",
+    "color_theme": "green",
+    "description": "Five consecutive PRs with zero AI-flagged issues across all categories. Dialed in.",
+    "unlock_rule": {
+      "metric": "consecutive_zero_flag_prs",
+      "condition": ">= 5",
+      "timeframe": "consecutive",
+      "reset_on_fail": true
+    },
+    "xp_reward": 300,
+    "rarity": "Uncommon",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 5 flawless PRs in a row"
+  },
+  {
+    "id": "security_first",
+    "name": "Security First",
+    "role": "Vulnerability Closer",
+    "tier": "Quality",
+    "category": "Security",
+    "icon_prompt": "A 3D purple medallion with a solid shield glyph embossed in the center; rich metallic finish, subtle top-left highlight",
+    "color_theme": "purple",
+    "description": "Resolved ten security flags raised by the AI reviewer. The codebase is safer for it.",
+    "unlock_rule": {
+      "metric": "security_flags_resolved",
+      "condition": ">= 10",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 250,
+    "rarity": "Uncommon",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 10 security flags resolved"
+  },
+  {
+    "id": "vulnerability_hunter",
+    "name": "Vulnerability Hunter",
+    "role": "Security Sentinel",
+    "tier": "Quality",
+    "category": "Security",
+    "icon_prompt": "A 3D purple medallion with a shield outline containing a checkmark in the center; deeper, premium finish with sharp bevel",
+    "color_theme": "purple",
+    "description": "Resolved fifty security flags lifetime, with zero criticals in your last fifty PRs. The hunt is yours.",
+    "unlock_rule": {
+      "metric": "security_flags_resolved_and_critical_free",
+      "condition": "lifetime_resolved >= 50 && criticals_in_last_50_prs == 0",
+      "timeframe": "rolling_30_days",
+      "reset_on_fail": true
+    },
+    "xp_reward": 600,
+    "rarity": "Rare",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 50 resolved · {{criticals}} criticals last 50 PRs"
+  },
+  {
+    "id": "immaculate_codebase",
+    "name": "Immaculate Codebase",
+    "role": "Quality Architect",
+    "tier": "Quality",
+    "category": "Code Quality",
+    "icon_prompt": "A 3D green medallion with stacked code-bracket glyphs embossed in the center; jewel-like finish, soft highlight",
+    "color_theme": "green",
+    "description": "Fifty PRs with an average AI quality score of 90 or above. Sustained, not lucky.",
+    "unlock_rule": {
+      "metric": "avg_ai_score_over_50_prs",
+      "condition": "avg >= 90 && sample >= 50",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 500,
+    "rarity": "Rare",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 50 PRs at avg {{avg}}"
+  },
+  {
+    "id": "test_first_developer",
+    "name": "Test-First Developer",
+    "role": "Coverage Crusader",
+    "tier": "Specialist",
+    "category": "Testing",
+    "icon_prompt": "A 3D amber medallion with an embossed lab-flask glyph (rounded bottom, neck, fill line); warm metallic finish with bevel",
+    "color_theme": "amber",
+    "description": "Twenty-five PRs that each pushed test coverage above 80%. Tests come first, ship comes second.",
+    "unlock_rule": {
+      "metric": "coverage_above_threshold_prs",
+      "condition": ">= 25",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 350,
+    "rarity": "Uncommon",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 25 coverage-positive PRs"
+  },
+  {
+    "id": "coverage_champion",
+    "name": "Coverage Champion",
+    "role": "Confidence Builder",
+    "tier": "Specialist",
+    "category": "Testing",
+    "icon_prompt": "A 3D amber medallion with concentric target rings centered on a small dot; sharp bevel, premium feel",
+    "color_theme": "amber",
+    "description": "Lifetime coverage average of 85% or higher across at least 100 reviewed PRs. The bar stays high.",
+    "unlock_rule": {
+      "metric": "lifetime_coverage_avg",
+      "condition": "avg >= 85 && sample >= 100",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 600,
+    "rarity": "Rare",
+    "visible_on_pr_comment": false,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 100 PRs · avg {{avg}}%"
+  },
+  {
+    "id": "doc_devotee",
+    "name": "Doc Devotee",
+    "role": "Knowledge Keeper",
+    "tier": "Specialist",
+    "category": "Documentation",
+    "icon_prompt": "A 3D coral medallion with an open-book glyph embossed in the center; warm finish, subtle highlight along the spine",
+    "color_theme": "coral",
+    "description": "Twenty-five PRs flagged 'documentation complete' by the AI reviewer. Future-you will thank present-you.",
+    "unlock_rule": {
+      "metric": "docs_complete_prs",
+      "condition": ">= 25",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 300,
+    "rarity": "Uncommon",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 25 documented PRs"
+  },
+  {
+    "id": "performance_optimizer",
+    "name": "Performance Optimizer",
+    "role": "Latency Slayer",
+    "tier": "Specialist",
+    "category": "Performance",
+    "icon_prompt": "A 3D pink medallion with a sharp lightning-bolt glyph embossed in the center; energetic finish, crisp bevel",
+    "color_theme": "pink",
+    "description": "Twenty-five PRs delivered measurable performance wins (latency, allocations, throughput). Speed compounds.",
+    "unlock_rule": {
+      "metric": "perf_improvement_prs",
+      "condition": ">= 25",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 550,
+    "rarity": "Rare",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 25 perf-positive PRs"
+  },
+  {
+    "id": "refactor_artisan",
+    "name": "Refactor Artisan",
+    "role": "Complexity Tamer",
+    "tier": "Specialist",
+    "category": "Code Quality",
+    "icon_prompt": "A 3D teal medallion with a circular refresh-cycle glyph (two arrows in a loop) embossed in the center; cool finish, subtle bevel",
+    "color_theme": "teal",
+    "description": "Twenty-five PRs each cut complexity by ten points or more. Less code, better code.",
+    "unlock_rule": {
+      "metric": "complexity_reduction_prs",
+      "condition": "count(complexity_delta <= -10) >= 25",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 500,
+    "rarity": "Rare",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 25 complexity-cutting PRs"
+  },
+  {
+    "id": "platform_pioneer",
+    "name": "Platform Pioneer",
+    "role": "Day-One Believer",
+    "tier": "Elite",
+    "category": "Platform",
+    "icon_prompt": "A 3D amber/gold medallion with an embossed five-point crown glyph in the center; rich gold finish with strong bevel and edge highlight",
+    "color_theme": "amber",
+    "description": "Among the first one hundred users on the platform. The early days are yours by right.",
+    "unlock_rule": {
+      "metric": "user_signup_rank",
+      "condition": "<= 100",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 1000,
+    "rarity": "Legendary",
+    "visible_on_pr_comment": false,
+    "progress_trackable": false,
+    "progress_label": "Awarded automatically at signup"
+  },
+  {
+    "id": "kilocoder",
+    "name": "Kilocoder",
+    "role": "Volume Virtuoso",
+    "tier": "Elite",
+    "category": "Activity",
+    "icon_prompt": "A 3D purple medallion with an embossed trophy glyph (cup with handles, base) in the center; deep premium finish, prominent bevel",
+    "color_theme": "purple",
+    "description": "One thousand reviewed PRs lifetime. Few enter this room.",
+    "unlock_rule": {
+      "metric": "pr_count",
+      "condition": ">= 1000",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 2000,
+    "rarity": "Legendary",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 1000 PRs"
+  },
+  {
+    "id": "flawless_year",
+    "name": "Flawless Year",
+    "role": "365-Day Sovereign",
+    "tier": "Elite",
+    "category": "Streak",
+    "icon_prompt": "A 3D red medallion with a bold five-point star embossed in the center; jewel finish, sharp angular bevel",
+    "color_theme": "red",
+    "description": "Three hundred and sixty-five consecutive days. A full revolution. Unbroken.",
+    "unlock_rule": {
+      "metric": "streak_days",
+      "condition": ">= 365",
+      "timeframe": "consecutive",
+      "reset_on_fail": true
+    },
+    "xp_reward": 2500,
+    "rarity": "Legendary",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 365 day streak"
+  },
+  {
+    "id": "polyglot_master",
+    "name": "Polyglot Master",
+    "role": "Cross-Language Sage",
+    "tier": "Elite",
+    "category": "Code Quality",
+    "icon_prompt": "A 3D teal medallion with an embossed globe glyph (circle with longitude/equator lines) in the center; cool premium finish",
+    "color_theme": "teal",
+    "description": "Five languages, each with an average AI score of 85+ across 50+ PRs. Mastery without borders.",
+    "unlock_rule": {
+      "metric": "languages_with_mastery",
+      "condition": "count(lang where prs >= 50 && avg_score >= 85) >= 5",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 1500,
+    "rarity": "Legendary",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 5 mastered languages"
+  },
+  {
+    "id": "codelens_legend",
+    "name": "Codelens Legend",
+    "role": "Hall of Fame",
+    "tier": "Elite",
+    "category": "Platform",
+    "icon_prompt": "A 3D gold medallion with a large central star surrounded by two small sparkles; the most premium finish — heavy bevel, edge glow, rich gold",
+    "color_theme": "amber",
+    "description": "Earned at least fifteen badges across every category. The full set. The legend grade.",
+    "unlock_rule": {
+      "metric": "badges_earned",
+      "condition": ">= 15",
+      "timeframe": "all_time",
+      "reset_on_fail": false
+    },
+    "xp_reward": 2500,
+    "rarity": "Legendary",
+    "visible_on_pr_comment": true,
+    "progress_trackable": true,
+    "progress_label": "{{current}} / 15 badges across all categories"
+  }
+]

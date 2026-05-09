@@ -1,5 +1,7 @@
 import {
   ActivityType,
+  BadgeCategory,
+  BadgeRarity,
   BadgeTier,
   SocialProvider,
 } from '../../../prisma/generated/client';
@@ -14,9 +16,14 @@ export interface SocialLinkView {
 export interface BadgeView {
   slug: string;
   name: string;
+  role: string;
   description: string;
   iconKey: string;
-  tier: BadgeTier | null;
+  tier: BadgeTier;
+  category: BadgeCategory;
+  rarity: BadgeRarity;
+  colorTheme: string;
+  xpReward: number;
   awardedAt: Date;
 }
 

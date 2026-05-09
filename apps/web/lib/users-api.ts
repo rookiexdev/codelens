@@ -18,7 +18,17 @@ export type ActivityType =
   | "account_deleted"
   | "account_restored";
 
-export type BadgeTier = "bronze" | "silver" | "gold" | "platinum";
+export type BadgeTier = "contributor" | "quality" | "specialist" | "elite";
+export type BadgeRarity = "common" | "uncommon" | "rare" | "legendary";
+export type BadgeCategory =
+  | "activity"
+  | "code_quality"
+  | "security"
+  | "testing"
+  | "documentation"
+  | "performance"
+  | "streak"
+  | "platform";
 
 export interface SocialLinkView {
   provider: SocialProvider;
@@ -30,9 +40,14 @@ export interface SocialLinkView {
 export interface BadgeView {
   slug: string;
   name: string;
+  role: string;
   description: string;
   iconKey: string;
-  tier: BadgeTier | null;
+  tier: BadgeTier;
+  category: BadgeCategory;
+  rarity: BadgeRarity;
+  colorTheme: string;
+  xpReward: number;
   awardedAt: string;
 }
 

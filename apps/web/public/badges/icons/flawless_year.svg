@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="Flawless Year">
+  <defs>
+    <radialGradient id="b18" cx="0.35" cy="0.3" r="0.85">
+      <stop offset="0%" stop-color="#FF7E78"/>
+      <stop offset="55%" stop-color="#DD3A33"/>
+      <stop offset="100%" stop-color="#7D1812"/>
+    </radialGradient>
+  </defs>
+  <circle cx="24" cy="24" r="22" fill="#7D1812"/>
+  <circle cx="24" cy="24" r="20" fill="url(#b18)"/>
+  <path d="M 10 20 A 14 14 0 0 1 28 10" stroke="#FF7E78" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.65"/>
+  <path d="M 24 12 L 27.2 20 L 35.5 20.7 L 29.2 26.2 L 31.2 34.5 L 24 30.2 L 16.8 34.5 L 18.8 26.2 L 12.5 20.7 L 20.8 20 Z" fill="#7D1812"/>
+</svg>

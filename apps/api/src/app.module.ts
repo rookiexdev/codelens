@@ -10,6 +10,7 @@ import { ActivityModule } from './activity/activity.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { BadgesModule } from './badges/badges.module';
 import { SoftDeleteModule } from './common/soft-delete/soft-delete.module';
 import { EnvironmentVariables, validateEnv } from './config/env.validation';
 import { LoggerModule } from './logger/logger.module';
@@ -42,6 +43,7 @@ import { UsersModule } from './users/users.module';
     PrismaModule,
     SoftDeleteModule,
     ActivityModule,
+    BadgesModule,
     UsersModule,
     AuthModule,
   ],
