@@ -119,7 +119,7 @@ export function ProfileBadges({
         </p>
       ) : (
         <ul
-          className="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 xl:grid-cols-10"
+          className="mt-4 grid grid-cols-4 gap-3 px-2 sm:grid-cols-6 sm:px-4 md:grid-cols-7 lg:grid-cols-8 xl:grid-cols-10"
           role="list"
         >
           {sorted.map((b) => (

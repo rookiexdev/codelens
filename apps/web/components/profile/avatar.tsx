@@ -63,7 +63,6 @@ export function Avatar({
             className="h-full w-full object-cover"
           />
         </span>
-        <h1>Hello world</h1>
         <StatusBadge
           status={status}
           size={badgeSize}

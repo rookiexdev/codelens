@@ -53,7 +53,7 @@ export function StatusBadge({
     tooltip ?? defaultTooltip(status, Boolean(onClick));
 
   const wrapperClasses =
-    "pointer-events-auto absolute bottom-0 right-0 z-[1] translate-x-[160%] translate-y-[85%]";
+    "pointer-events-auto absolute bottom-0 right-0 z-[1] translate-x-1/6 translate-y-1/6";
 
   const bubbleClasses = `inline-flex items-center justify-center rounded-full border border-border bg-surface text-center leading-none shadow-[0_4px_12px_-4px_var(--glow-1)] ${SIZE_CLASS[size]}`;
 

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { memo } from "react";
 import { Avatar } from "@/components/profile/avatar";
+import { ProfileBadges } from "@/components/profile/profile-badges";
 import { getUserDisplayName } from "@/components/profile/user-context";
 import { SOCIAL_PROVIDER_META } from "@/lib/social-providers";
 import type { PrivateUserProfile } from "@/lib/users-api";
@@ -38,6 +39,7 @@ function ProfileSidebarImpl({
         onEdit={onEdit}
         onStatusClick={onStatusClick}
       />
+      <ProfileBadges earned={profile.badges} />
       <TechStackCard techStack={profile.techStack} />
       <SocialLinksCard socialLinks={profile.socialLinks} />
     </aside>
