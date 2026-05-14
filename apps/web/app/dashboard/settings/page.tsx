@@ -3,6 +3,7 @@
 import { Palette, Settings as SettingsIcon, ShieldAlert, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ConnectedProviders } from "@/components/oauth/connected-providers";
 import { DeleteAccountDialog } from "@/components/profile/delete-account-dialog";
 import { useUser } from "@/components/profile/user-context";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
@@ -39,6 +40,10 @@ export default function SettingsPage() {
       />
 
       <div className="space-y-6">
+        <ConnectedProviders />
+
+        <hr className="border-border" />
+
         <section>
           <header className="flex flex-col gap-1">
             <h3 className="inline-flex items-center gap-2 text-sm font-bold tracking-tight text-fg">

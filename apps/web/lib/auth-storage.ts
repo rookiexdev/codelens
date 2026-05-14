@@ -14,3 +14,12 @@ export function clearAccessToken(): void {
   if (typeof window === "undefined") return;
   window.localStorage.removeItem(TOKEN_KEY);
 }
+
+export function isAuthenticated(): boolean {
+  return getAccessToken() !== null;
+}
+
+export function getAuthHeaders(): { Authorization: string } | Record<string, never> {
+  const token = getAccessToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}

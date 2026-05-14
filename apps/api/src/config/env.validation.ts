@@ -80,6 +80,46 @@ export class EnvironmentVariables {
   @Min(1)
   @IsOptional()
   THROTTLE_AUTH_TTL_MS: number = 60_000;
+
+  @IsString()
+  @IsOptional()
+  FRONTEND_URL: string = 'http://localhost:3000';
+
+  @IsString()
+  @IsOptional()
+  GITHUB_CLIENT_ID?: string;
+
+  @IsString()
+  @IsOptional()
+  GITHUB_CLIENT_SECRET?: string;
+
+  @IsString()
+  @IsOptional()
+  GITHUB_CALLBACK_URL?: string;
+
+  @IsString()
+  @IsOptional()
+  GITLAB_CLIENT_ID?: string;
+
+  @IsString()
+  @IsOptional()
+  GITLAB_CLIENT_SECRET?: string;
+
+  @IsString()
+  @IsOptional()
+  GITLAB_CALLBACK_URL?: string;
+
+  @IsString()
+  @IsOptional()
+  BITBUCKET_CLIENT_ID?: string;
+
+  @IsString()
+  @IsOptional()
+  BITBUCKET_CLIENT_SECRET?: string;
+
+  @IsString()
+  @IsOptional()
+  BITBUCKET_CALLBACK_URL?: string;
 }
 
 export function validateEnv(
