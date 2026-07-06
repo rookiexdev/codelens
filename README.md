@@ -5,15 +5,15 @@
 [![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white)](https://nestjs.com/)
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=flat&logo=prisma&logoColor=white)](https://www.prisma.io/)
 [![Turborepo](https://img.shields.io/badge/Turborepo-EF4444?style=flat&logo=turborepo&logoColor=white)](https://turbo.build/)
 
 ---
 
 ## What is CodeLens?
 
-CodeLens is a full-stack SaaS platform that reviews pull requests using AI. Developers connect their Git provider (GitHub, GitLab, or Bitbucket), paste a PR URL into the dashboard, and receive a structured report covering:
+CodeLens is a full-stack platform that reviews pull requests using AI. Developers connect their Git provider (GitHub, GitLab, or Bitbucket), paste a PR URL into the dashboard, and receive a structured report covering:
 
 - **Bugs** — critical and minor issues with file + line references
 - **Security findings** — OWASP-tagged vulnerabilities
@@ -21,7 +21,7 @@ CodeLens is a full-stack SaaS platform that reviews pull requests using AI. Deve
 - **Improvement suggestions** — readability, performance, patterns
 - **PR verdict** — approve / needs attention / changes required
 
-Reports can be viewed on the dashboard, exported as PDF, or posted back as a comment directly on the PR.
+It also includes a **profile + gamification** layer: user profiles with social links and tech stack, an activity log, contribution history, and an XP/badge system awarded via scheduled jobs.
 
 ---
 
@@ -29,14 +29,14 @@ Reports can be viewed on the dashboard, exported as PDF, or posted back as a com
 
 | Layer | Technology | Purpose |
 |---|---|---|
-| Monorepo | Turborepo | Shared packages, parallel builds, caching |
+| Monorepo | Turborepo + Bun | Shared packages, parallel builds, caching |
 | Backend | NestJS + TypeScript | REST API, modules, guards, pipes |
-| Frontend | Next.js + TypeScript | Dashboard, auth pages, report UI |
-| Database | PostgreSQL + TypeORM | Users, reviews, OAuth tokens |
-| AI | Anthropic Claude API | Code analysis, structured feedback |
+| Frontend | Next.js + React + TypeScript | Dashboard, auth pages, report UI |
+| Database | MongoDB + Prisma | Users, reviews, OAuth tokens, badges |
+| AI | Anthropic Claude API | Code analysis, structured feedback *(in progress)* |
 | Auth | Passport.js + JWT | Local auth + OAuth (GitHub/GitLab/Bitbucket) |
-| Containerisation | Docker + Docker Compose | Local dev + production deployment |
-| Deployment | Railway (API) + Vercel (web) | CI/CD, managed infra |
+| Scheduling | `@nestjs/schedule` | Badge-award cron jobs |
+| Logging | Winston (`nest-winston`) | Structured request/app logs |
 
 ---
 
@@ -45,37 +45,39 @@ Reports can be viewed on the dashboard, exported as PDF, or posted back as a com
 ```
 codelens/
 ├── apps/
-│   ├── api/                  # NestJS backend
+│   ├── api/                  # NestJS backend (port 3001)
 │   │   ├── src/
-│   │   │   ├── auth/         # JWT, OAuth strategies, guards
-│   │   │   ├── reviews/      # PR review logic, report builder
-│   │   │   ├── ai/           # Claude API integration, prompt builder
-│   │   │   ├── git/          # GitHub / GitLab / Bitbucket API clients
-│   │   │   ├── users/        # User entity, profile
-│   │   │   └── reports/      # PDF generation, share links
-│   │   ├── Dockerfile
+│   │   │   ├── auth/         # JWT, local strategy, guards
+│   │   │   ├── oauth/        # GitHub / GitLab / Bitbucket OAuth strategies
+│   │   │   ├── users/        # Profiles, social links, tech stack, status
+│   │   │   ├── repos/        # Connected provider repositories
+│   │   │   ├── badges/       # Badge catalog + award cron
+│   │   │   ├── activity/     # Activity log, contribution history
+│   │   │   ├── prisma/       # PrismaService (Mongo client)
+│   │   │   ├── logger/       # Winston config
+│   │   │   ├── common/       # Shared guards, decorators, filters
+│   │   │   ├── config/       # Env validation
+│   │   │   └── main.ts
+│   │   ├── prisma/
+│   │   │   ├── schema.prisma # MongoDB models (source of truth)
+│   │   │   └── seeds/        # Idempotent badge-catalog seed
 │   │   └── package.json
 │   │
-│   └── web/                  # Next.js frontend
-│       ├── app/
-│       │   ├── (auth)/       # Login, signup pages
-│       │   ├── dashboard/    # Main review dashboard
-│       │   ├── review/[id]/  # Individual report view
-│       │   └── settings/     # Git provider connections
-│       ├── components/
-│       │   ├── editor/       # Code / diff input
-│       │   ├── report/       # Report cards, findings list
-│       │   └── ui/           # Shared UI primitives
-│       ├── Dockerfile
+│   └── web/                  # Next.js frontend (port 3000)
+│       ├── app/              # App-router pages
+│       ├── components/       # UI components
+│       ├── hooks/
+│       ├── lib/
+│       ├── public/
 │       └── package.json
 │
 ├── packages/
-│   ├── shared-types/         # Shared TypeScript interfaces (Review, User, Finding)
-│   ├── ui/                   # Shared React component library
+│   ├── shared-types/         # Shared TypeScript types
+│   ├── ui/                   # Shared React components
 │   └── eslint-config/        # Shared ESLint rules
 │
-├── docker-compose.yml        # Local dev: API + Web + PostgreSQL
-├── docker-compose.prod.yml   # Production compose
+├── deploy/                   # Deployment runbook + PM2 / Nginx configs
+├── docker-compose.yml        # Local dev: single-node MongoDB replica set
 ├── turbo.json                # Turborepo pipeline config
 └── package.json              # Root workspace
 ```
@@ -107,7 +109,7 @@ Next.js dashboard  ──POST /reviews──▶  NestJS API
                                     ┌───────┴────────┐
                                     │                │
                                Save to DB     Return to client
-                             (PostgreSQL)   (structured report)
+                              (MongoDB)      (structured report)
                                                     │
                                             Optional: post comment
                                             back to GitHub PR
@@ -115,41 +117,24 @@ Next.js dashboard  ──POST /reviews──▶  NestJS API
 
 ---
 
-## Database Schema
+## Database
 
-### users
-| Column | Type | Notes |
-|---|---|---|
-| id | UUID | Primary key |
-| email | VARCHAR | Unique |
-| password_hash | VARCHAR | bcrypt, nullable (OAuth users) |
-| created_at | TIMESTAMP | |
+MongoDB, accessed through Prisma. The full, authoritative schema lives in
+[`apps/api/prisma/schema.prisma`](apps/api/prisma/schema.prisma). Collections use ObjectId ids,
+`@map`-ed snake_case field names, and `onDelete: Cascade` relations.
 
-### oauth_connections
-| Column | Type | Notes |
-|---|---|---|
-| id | UUID | Primary key |
-| user_id | UUID | FK → users |
-| provider | ENUM | github / gitlab / bitbucket |
-| access_token | VARCHAR | AES-256 encrypted |
-| refresh_token | VARCHAR | AES-256 encrypted |
-| scope | VARCHAR | Granted OAuth scopes |
+| Collection | Purpose |
+|---|---|
+| `users` | Accounts, profile, tech stack, status; soft-deleted via `deleted_at` |
+| `oauth_connections` | Encrypted GitHub/GitLab/Bitbucket access + refresh tokens |
+| `reviews` | PR review results — score, verdict, structured `feedback` JSON, share token |
+| `user_social_links` | Ordered social/portfolio links per user |
+| `activity_log` | Typed activity events (login, oauth, review, badge, …) |
+| `user_contributions` | Per-day contribution counts (UTC-normalised) |
+| `badges` / `user_badges` | Badge catalog and awarded badges |
 
-### reviews
-| Column | Type | Notes |
-|---|---|---|
-| id | UUID | Primary key |
-| user_id | UUID | FK → users |
-| provider | ENUM | github / gitlab / bitbucket / manual |
-| repo | VARCHAR | e.g. acme-org/backend-api |
-| pr_number | INT | Nullable (manual paste) |
-| pr_title | VARCHAR | |
-| language | VARCHAR | Primary language detected |
-| score | INT | 0–100 quality score |
-| verdict | ENUM | approve / needs_attention / changes_required |
-| feedback | JSONB | Full structured AI response |
-| share_token | VARCHAR | For public share links |
-| created_at | TIMESTAMP | |
+> **Note:** MongoDB has no SQL migrations. Schema changes are applied with `prisma db push`,
+> and the generated client (`prisma/generated`, gitignored) must be created with `prisma generate`.
 
 ---
 
@@ -157,9 +142,9 @@ Next.js dashboard  ──POST /reviews──▶  NestJS API
 
 ### Prerequisites
 
-- Node.js 20+
-- Docker + Docker Compose
-- bun >1.3
+- Node.js 18+
+- bun > 1.3
+- Docker (for the local MongoDB replica set) **or** a MongoDB Atlas connection string
 
 ### 1. Clone and install
 
@@ -169,158 +154,142 @@ cd codelens
 bun install
 ```
 
-### 2. Configure environment
+### 2. Start the local database
+
+Prisma requires MongoDB to run as a replica set (even single-node). The provided compose file
+handles this:
+
+```bash
+docker compose up -d          # starts a one-node replica set on :27017
+```
+
+### 3. Configure environment
 
 ```bash
 cp apps/api/.env.example apps/api/.env
-cp apps/web/.env.example apps/web/.env
+# create apps/web/.env.local with the API URL (see below)
 ```
 
 **`apps/api/.env`**
 ```env
-# App
 NODE_ENV=development
 PORT=3001
 
-# Database
-DATABASE_URL=postgresql://codelens:codelens@localhost:5432/codelens
+# Local replica set from docker-compose (or your Atlas SRV string)
+DATABASE_URL='mongodb://localhost:27017/codelens?replicaSet=rs0&directConnection=true'
 
-# JWT
-JWT_SECRET=your-super-secret-jwt-key-min-32-chars
+JWT_SECRET=your-super-secret-jwt-key-min-32-chars   # must be >= 32 chars
 JWT_EXPIRES_IN=7d
+ENCRYPTION_KEY=your-32-char-encryption-key-here     # encrypts stored OAuth tokens
 
-# Anthropic
-ANTHROPIC_API_KEY=sk-ant-...
-
-# Encryption (for OAuth tokens)
-ENCRYPTION_KEY=your-32-char-encryption-key-here
+WEB_ORIGIN=http://localhost:3000                    # used by CORS
+FRONTEND_URL=http://localhost:3000                  # used for OAuth redirects
 
 # GitHub OAuth
 GITHUB_CLIENT_ID=your-github-client-id
 GITHUB_CLIENT_SECRET=your-github-client-secret
-GITHUB_CALLBACK_URL=http://localhost:3001/auth/github/callback
+GITHUB_CALLBACK_URL=http://localhost:3001/oauth/github/callback
 
 # GitLab OAuth
 GITLAB_CLIENT_ID=your-gitlab-client-id
 GITLAB_CLIENT_SECRET=your-gitlab-client-secret
+GITLAB_CALLBACK_URL=http://localhost:3001/oauth/gitlab/callback
 
 # Bitbucket OAuth
 BITBUCKET_CLIENT_ID=your-bitbucket-client-id
 BITBUCKET_CLIENT_SECRET=your-bitbucket-client-secret
+BITBUCKET_CALLBACK_URL=http://localhost:3001/oauth/bitbucket/callback
 ```
 
-**`apps/web/.env`**
+**`apps/web/.env.local`**
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3001
-NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-### 3. Start with Docker
+### 4. Sync schema, seed, run
 
 ```bash
-# Start everything (API + Web + PostgreSQL)
-docker-compose up
+cd apps/api
+bun run prisma:generate      # generate the Prisma client
+bun run prisma:push          # sync schema to MongoDB
+bun run db:seed              # seed the badge catalog (idempotent)
+cd ../..
 
-# Or run just the database, develop locally
-docker-compose up postgres
-bun dev
+bun dev                      # runs api + web in parallel (Turborepo)
 ```
 
-### 4. Open the app
+### 5. Open the app
 
 | Service | URL |
 |---|---|
 | Web dashboard | http://localhost:3000 |
 | API | http://localhost:3001 |
-| Swagger docs | http://localhost:3001/api/docs |
 
 ---
 
 ## Development Commands
 
 ```bash
-# Run all apps in parallel (Turborepo)
-bun dev
+bun dev            # run all apps in parallel (Turborepo)
+bun build          # build all apps
+bun test           # run tests across all packages
+bun lint           # lint everything
 
-# Build all apps
-bun build
-
-# Run tests across all packages
-bun test
-
-# Lint everything
-bun lint
-
-# Generate TypeORM migration
-bun --filter api migration:generate -- src/migrations/MigrationName
-
-# Run migrations
-bun --filter api migration:run
+# Prisma (run inside apps/api)
+bun run prisma:generate   # regenerate the client
+bun run prisma:push       # apply schema changes to MongoDB
+bun run prisma:studio     # browse data
+bun run db:seed           # seed the badge catalog
 ```
 
 ---
 
 ## OAuth Setup
 
-To connect Git providers, you need to register OAuth Apps:
+To connect Git providers, register OAuth apps and set their callback URLs to match
+`*_CALLBACK_URL` in your `.env`:
 
 **GitHub**
-1. Go to GitHub → Settings → Developer Settings → OAuth Apps → New OAuth App
+1. GitHub → Settings → Developer Settings → OAuth Apps → New OAuth App
 2. Homepage URL: `http://localhost:3000`
-3. Callback URL: `http://localhost:3001/auth/github/callback`
+3. Callback URL: `http://localhost:3001/oauth/github/callback`
 4. Copy Client ID + Secret into `.env`
 
 **GitLab**
-1. Go to GitLab → User Settings → Applications
-2. Redirect URI: `http://localhost:3001/auth/gitlab/callback`
+1. GitLab → User Settings → Applications
+2. Redirect URI: `http://localhost:3001/oauth/gitlab/callback`
 3. Scopes: `read_api`, `read_repository`
 
 **Bitbucket**
-1. Go to Bitbucket → Personal Settings → OAuth → Add consumer
-2. Callback URL: `http://localhost:3001/auth/bitbucket/callback`
+1. Bitbucket → Personal Settings → OAuth → Add consumer
+2. Callback URL: `http://localhost:3001/oauth/bitbucket/callback`
 3. Permissions: `Repositories: Read`, `Pull requests: Read`
 
 ---
 
 ## Deployment
 
-### Backend — Railway
+Production runs on a single Ubuntu server: **MongoDB Atlas** (managed replica set),
+the two Node apps under **PM2**, behind **Nginx + Certbot** (HTTPS).
 
-```bash
-# Connect repo to Railway, set environment variables in dashboard
-# Railway auto-detects Dockerfile in apps/api
-railway up
-```
-
-### Frontend — Vercel
-
-```bash
-# Connect repo to Vercel, set NEXT_PUBLIC_API_URL to your Railway URL
-vercel --prod
-```
-
-### Production Docker
-
-```bash
-docker-compose -f docker-compose.prod.yml up -d
-```
+See the full step-by-step runbook in [`deploy/DEPLOYMENT.md`](deploy/DEPLOYMENT.md).
+PM2 and Nginx configs live in [`deploy/ecosystem.config.js`](deploy/ecosystem.config.js) and
+[`deploy/nginx.conf`](deploy/nginx.conf).
 
 ---
 
 ## Roadmap
 
-See the full project roadmap in [Notion](https://gopalsasmal.notion.site/3476e1c0cca4808d80d3c4a69b119afa?v=3476e1c0cca481559eeb000cdee43a8b) *(link your Notion page here)*.
-
 High-level milestones:
 - [x] Project setup & Turborepo structure
-- [ ] Auth — JWT + local login/signup
-- [ ] OAuth — GitHub / GitLab / Bitbucket
+- [x] Auth — JWT + local login/signup
+- [x] OAuth — GitHub / GitLab / Bitbucket
+- [x] Profiles, activity log & badge system
 - [ ] Core review — manual code paste + Claude API
 - [ ] PR URL flow — fetch diff from Git providers
 - [ ] Report UI — dashboard, findings, score
 - [ ] Export — PDF reports + share links
 - [ ] Post-back — comment on GitHub/GitLab PR
-- [ ] Deploy — Railway + Vercel
 
 ---
 
