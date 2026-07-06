@@ -1,19 +1,44 @@
-version: '3.8'
-services:
-  api:
-    build:
-      context: ./apps/api
-      dockerfile: Dockerfile
-    ports:
-      - '3001:3001'
-    env_file: ./apps/api/.env
+# Local development database only.
+#
+# Prisma + MongoDB requires a replica set (even single-node) — a standalone
+# mongod is rejected. This spins up a one-node replica set for local dev.
+# Production uses MongoDB Atlas; see deploy/DEPLOYMENT.md.
+#
+#   docker compose up -d
+#   # apps/api/.env:
+#   DATABASE_URL='mongodb://localhost:27017/codelens?replicaSet=rs0&directConnection=true'
+#
+# The apps themselves run via `bun dev` (Turborepo), not in containers.
 
-  web:
-    build:
-      context: ./apps/web
-      dockerfile: Dockerfile
+services:
+  mongo:
+    image: mongo:7
+    container_name: codelens-mongo
+    command: ['--replSet', 'rs0', '--bind_ip_all']
     ports:
-      - '3000:3000'
-    env_file: ./apps/web/.env
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # One-shot: initialises the replica set the first time, no-op afterwards.
+  mongo-init:
+    image: mongo:7
     depends_on:
-      - api
+      mongo:
+        condition: service_healthy
+    restart: 'no'
+    entrypoint:
+      - mongosh
+      - --host
+      - mongo:27017
+      - --quiet
+      - --eval
+      - "try { rs.status() } catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }) }"
+
+volumes:
+  mongo-data:

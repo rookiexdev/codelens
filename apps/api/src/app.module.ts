@@ -11,10 +11,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { BadgesModule } from './badges/badges.module';
+import { EncryptionModule } from './common/encryption/encryption.module';
 import { SoftDeleteModule } from './common/soft-delete/soft-delete.module';
 import { EnvironmentVariables, validateEnv } from './config/env.validation';
 import { LoggerModule } from './logger/logger.module';
+import { OAuthModule } from './oauth/oauth.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ReposModule } from './repos/repos.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -41,11 +44,14 @@ import { UsersModule } from './users/users.module';
     }),
     LoggerModule,
     PrismaModule,
+    EncryptionModule,
     SoftDeleteModule,
     ActivityModule,
     BadgesModule,
     UsersModule,
     AuthModule,
+    OAuthModule,
+    ReposModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
