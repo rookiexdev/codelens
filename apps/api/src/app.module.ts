@@ -14,6 +14,7 @@ import { BadgesModule } from './badges/badges.module';
 import { EncryptionModule } from './common/encryption/encryption.module';
 import { SoftDeleteModule } from './common/soft-delete/soft-delete.module';
 import { EnvironmentVariables, validateEnv } from './config/env.validation';
+import { HealthModule } from './health/health.module';
 import { LoggerModule } from './logger/logger.module';
 import { OAuthModule } from './oauth/oauth.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -44,6 +45,7 @@ import { UsersModule } from './users/users.module';
     }),
     LoggerModule,
     PrismaModule,
+    HealthModule,
     EncryptionModule,
     SoftDeleteModule,
     ActivityModule,

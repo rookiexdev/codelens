@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'codelens-api',
+      name: 'codelens-backend',
       cwd: './apps/api',
       script: 'dist/src/main.js',
       instances: 1,
